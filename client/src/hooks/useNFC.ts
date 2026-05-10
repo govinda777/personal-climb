@@ -20,12 +20,12 @@ export function useNFC() {
     }
 
     try {
-      // @ts-ignore - Web NFC is still experimental in some types
+      // @ts-expect-error - Web NFC is still experimental in some types
       const ndef = new NDEFReader();
       await ndef.scan();
       setIsReading(true);
 
-      ndef.addEventListener("reading", ({ message, serialNumber }: any) => {
+      ndef.addEventListener("reading", ({ serialNumber }: { serialNumber: string }) => {
         console.log(`> Serial Number: ${serialNumber}`);
         // Handle NFC data (e.g., check-in at equipment)
         setLastMessage(`Tag lida: ${serialNumber}`);
