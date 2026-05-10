@@ -31,9 +31,9 @@ jobs:
           NEXT_PUBLIC_SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
-        with:
-          enablement: true
+        # Note: 'enablement: true' is removed to avoid "Resource not accessible" error.
+        # Ensure GitHub Pages is manually enabled in Settings > Pages > Source: GitHub Actions.
+        uses: actions/configure-pages@v5
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
