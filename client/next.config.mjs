@@ -4,8 +4,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Ensure that the base path is correct for GitHub Pages if needed
-  // basePath: '/PersonalClimb',
+  basePath: '/personal-climb',
+  trailingSlash: true,
 };
 
 export default nextConfig;
