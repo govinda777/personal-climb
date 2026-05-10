@@ -175,7 +175,7 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-24 pt-12 border-t border-white/5 text-center text-[10px] font-black text-zinc-800 uppercase tracking-[0.5em]">
-          © 2024 {personalConfig.brandName} // Powered by Personal Climb OS
+          © 2024 {personalConfig.brandName} {"//"} Powered by Personal Climb OS
         </div>
       </footer>
     </div>
