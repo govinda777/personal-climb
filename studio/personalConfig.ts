@@ -9,9 +9,22 @@ export default {
       title: 'Nome da Marca'
     },
     {
+      name: 'logo',
+      type: 'image',
+      title: 'Logotipo',
+      options: {
+        hotspot: true
+      }
+    },
+    {
       name: 'primaryColor',
       type: 'string',
       title: 'Cor Primária (Hex)'
+    },
+    {
+      name: 'secondaryColor',
+      type: 'string',
+      title: 'Cor Secundária (Hex)'
     },
     {
       name: 'heroTitle',
@@ -27,6 +40,12 @@ export default {
       name: 'trainingPhilosophy',
       type: 'text',
       title: 'Metodologia / Filosofia de Treino'
+    },
+    {
+      name: 'consentTerms',
+      type: 'text',
+      title: 'Termos de Consentimento Customizados',
+      description: 'Texto legal de anamnese e uso de dados'
     },
     {
       name: 'packages',

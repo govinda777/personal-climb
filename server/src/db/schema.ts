@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, integer, jsonb, numeric } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, integer, jsonb, numeric, boolean } from "drizzle-orm/pg-core";
 
 export const personals = pgTable("personals", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -29,6 +29,18 @@ export const athletes = pgTable("athletes", {
   physicalStats: jsonb("physical_stats"),
   isActive: integer("is_active").default(1).notNull(), // 1 para ativo (faturável), 0 para inativo
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const anamnesis = pgTable("anamnesis", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  athleteId: uuid("athlete_id").references(() => athletes.id).notNull(),
+  medicalRestrictions: text("medical_restrictions"),
+  goals: text("goals"),
+  anthropometricData: jsonb("anthropometric_data"), // peso, altura, % gordura, etc.
+  lifestyleInfo: jsonb("lifestyle_info"), // sono, fumante, nivel de atividade
+  consentTermsSigned: boolean("consent_terms_signed").default(false).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const trainingPackages = pgTable("training_packages", {
@@ -73,7 +85,17 @@ export const workoutSessions = pgTable("workout_sessions", {
   planId: uuid("plan_id").references(() => trainingPlans.id).notNull(),
   name: text("name").notNull(),
   order: integer("order").notNull(),
-  exercises: jsonb("exercises"),
+});
+
+export const workoutExercises = pgTable("workout_exercises", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  sessionId: uuid("session_id").references(() => workoutSessions.id).notNull(),
+  exerciseId: text("exercise_id").notNull(), // ID do documento no Sanity
+  order: integer("order").notNull(),
+  sets: integer("sets"),
+  reps: text("reps"),
+  load: text("load"),
+  notes: text("notes"),
 });
 
 export const workoutLogs = pgTable("workout_logs", {
