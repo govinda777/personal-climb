@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@privy-io/react-auth": "^3.24.0",
     "@sanity/client": "^6.15.0",
     "clsx": "^2.1.0",
     "framer-motion": "^12.4.7",
