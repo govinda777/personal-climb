@@ -3,12 +3,19 @@ import { pgTable, uuid, text, timestamp, integer, jsonb, numeric } from "drizzle
 export const personals = pgTable("personals", {
   id: uuid("id").primaryKey().defaultRandom(),
   userId: uuid("user_id").notNull(),
+  slug: text("slug").unique().notNull(), // URL amigável para White Label
   brandName: text("brand_name").notNull(),
   primaryColor: text("primary_color").default("#000000"),
   bio: text("bio"),
   trainingPhilosophy: text("training_philosophy"), // Protocolo de treino do personal
   gamificationRules: jsonb("gamification_rules"), // Regras de gamificação
   evaluationMetrics: jsonb("evaluation_metrics"), // Métricas de avaliação
+
+  // Stripe Integration
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
+  subscriptionStatus: text("subscription_status").default("inactive"), // active, trialing, past_due, canceled, inactive
+
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -20,6 +27,7 @@ export const athletes = pgTable("athletes", {
   frenchGradeLevel: text("french_grade_level"),
   equipmentAccess: jsonb("equipment_access"),
   physicalStats: jsonb("physical_stats"),
+  isActive: integer("is_active").default(1).notNull(), // 1 para ativo (faturável), 0 para inativo
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

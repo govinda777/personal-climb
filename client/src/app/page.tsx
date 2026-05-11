@@ -3,8 +3,9 @@
 import { personalConfig } from "@/lib/mockConfig";
 import { Button } from "@/components/ui/Button";
 import { ScheduleModule } from "@/components/ScheduleModule";
-import { Mountain, ChevronRight, Target, Zap, Shield, Calendar, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Mountain, ChevronRight, Target, Zap, Shield, Calendar, ArrowRight, CheckCircle2, User, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -52,12 +53,16 @@ export default function Home() {
             {personalConfig.heroSubtitle}
           </p>
           <div className="flex flex-wrap justify-center gap-6 pt-12">
-            <Button size="lg" className="bg-white text-black hover:bg-zinc-200 h-16 px-12 rounded-none font-black italic text-xl uppercase tracking-tighter group">
-              Get Started <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button size="lg" variant="outline" className="border-white/10 h-16 px-12 rounded-none font-black italic text-xl uppercase tracking-tighter">
-              View Plans
-            </Button>
+            <Link href="/personal/govinda">
+              <Button size="lg" className="bg-white text-black hover:bg-zinc-200 h-16 px-12 rounded-none font-black italic text-xl uppercase tracking-tighter group">
+                <User className="mr-2 w-5 h-5" /> Sou Aluno
+              </Button>
+            </Link>
+            <Link href="/business">
+              <Button size="lg" variant="outline" className="border-white/10 h-16 px-12 rounded-none font-black italic text-xl uppercase tracking-tighter group">
+                <Briefcase className="mr-2 w-5 h-5" /> Sou Personal
+              </Button>
+            </Link>
           </div>
         </motion.div>
       </section>
