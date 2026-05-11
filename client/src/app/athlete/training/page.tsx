@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Play, Pause, RotateCcw, Nfc } from "lucide-react";
 
 export default function TrainingPlayer() {
-  const { isSupported, isReading, startScan, lastMessage } = useNFC();
+  const { isReading, startScan, lastMessage } = useNFC();
 
   return (
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50 p-6">

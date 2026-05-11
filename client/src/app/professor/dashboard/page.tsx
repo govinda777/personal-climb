@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/Button";
-import { Users, AlertTriangle, CheckCircle2, TrendingUp, Clock } from "lucide-react";
+import { Users, AlertTriangle, TrendingUp, Clock } from "lucide-react";
 
 export default function ProfessorDashboard() {
   const students = [
