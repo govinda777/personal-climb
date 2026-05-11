@@ -90,16 +90,26 @@ erDiagram
 
 ---
 
-## 2. Estrutura Técnica e Deploy (IaC)
+## 2. Estrutura Técnica e Fluxos de Uso
 
-Este projeto utiliza uma arquitetura moderna e escalável, focada em performance e SEO.
+Este projeto utiliza uma arquitetura moderna e escalável, focada em performance, SEO e segurança Web3.
 
-### Componentes
+### Fluxos Principais (Implementação em curso)
+
+1.  **UC01: Seleção de Perfil (Onboarding):** Redirecionamento inteligente entre Aluno (White Label) e Personal (Business).
+2.  **UC02: Autenticação Privy:** Login unificado via Social ou Wallet.
+3.  **UC03/04: Gestão Financeira:** Integração com Stripe para assinaturas e cobrança baseada em uso (por atleta ativo).
+4.  **UC05: White Label Dinâmico:** Carregamento de marca e treinos baseado no slug do personal.
+
+### Componentes Técnicos
 1. **Frontend (`/client`):** Next.js 15 (App Router) + Tailwind CSS.
+   - **Autenticação:** Privy.io.
    - **Hospedagem:** GitHub Pages (Exportação Estática).
 2. **Backend (`/server`):** Hono API + Drizzle ORM.
+   - **Banco de Dados:** PostgreSQL (Supabase/Neon).
+   - **Pagamentos:** Stripe (Usage-based billing).
    - **Hospedagem:** Vercel (Edge Functions).
-3. **CMS (`/studio`):** Sanity.io para gestão white-label.
+3. **CMS (`/studio`):** Sanity.io para gestão de conteúdo white-label.
 
 ### CI/CD (GitHub Actions)
 - `.github/workflows/deploy-frontend.yml`: Build e deploy automático para GitHub Pages.
