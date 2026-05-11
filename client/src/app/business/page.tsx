@@ -2,8 +2,11 @@
 
 import { Mountain, CheckCircle2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { usePrivy } from "@privy-io/react-auth";
 
 export default function BusinessPage() {
+  const { login } = usePrivy();
+
   return (
     <div className="min-h-screen bg-black text-white font-sans">
       <nav className="fixed w-full z-50 flex items-center justify-between p-6 bg-black/80 backdrop-blur-md border-b border-white/5">
@@ -13,7 +16,11 @@ export default function BusinessPage() {
           </div>
           <span>PERSONAL CLIMB PRO</span>
         </div>
-        <Button variant="outline" className="border-white/10 text-[10px] font-black tracking-widest px-6 h-10 hover:bg-white hover:text-black">
+        <Button
+          onClick={login}
+          variant="outline"
+          className="border-white/10 text-[10px] font-black tracking-widest px-6 h-10 hover:bg-white hover:text-black"
+        >
           LOGIN / SIGNUP
         </Button>
       </nav>
@@ -27,7 +34,11 @@ export default function BusinessPage() {
             A primeira plataforma white-label pensada exclusivamente para treinadores de escalada de alta performance.
           </p>
           <div className="pt-10">
-            <Button size="lg" className="bg-white text-black hover:bg-zinc-200 h-16 px-12 rounded-none font-black italic text-xl uppercase tracking-tighter group">
+            <Button
+              onClick={login}
+              size="lg"
+              className="bg-white text-black hover:bg-zinc-200 h-16 px-12 rounded-none font-black italic text-xl uppercase tracking-tighter group"
+            >
               Começar Agora <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>

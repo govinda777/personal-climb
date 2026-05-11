@@ -6,10 +6,23 @@ import { ScheduleModule } from "@/components/ScheduleModule";
 import { Mountain, Target, Zap, Shield, CheckCircle2, User, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { UserTypeModal } from "@/components/UserTypeModal";
+import { useState, useEffect } from "react";
 
 export default function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const hasSeenModal = sessionStorage.getItem("hasSeenUserTypeModal");
+    if (!hasSeenModal) {
+      setIsModalOpen(true);
+      sessionStorage.setItem("hasSeenUserTypeModal", "true");
+    }
+  }, []);
+
   return (
     <div className="flex flex-col min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans">
+      <UserTypeModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       {/* Background Decorative Gradient */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(20,20,20,1)_0%,rgba(0,0,0,1)_100%)] -z-20" />
 
