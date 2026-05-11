@@ -96,6 +96,7 @@ Este projeto utiliza uma arquitetura moderna e escalável, focada em performance
 
 ### Fluxos Principais (Implementação em curso)
 
+0.  **Estratégia Híbrida de Dados:** Separação entre SQL (Dados sensíveis) e Sanity CMS (Conteúdo/UI). Veja [STORAGE_STRATEGY.md](./STORAGE_STRATEGY.md).
 1.  **UC01: Seleção de Perfil (Onboarding):** Redirecionamento inteligente entre Aluno (White Label) e Personal (Business).
 2.  **UC02: Autenticação Privy:** Login unificado via Social ou Wallet.
 3.  **UC03/04: Gestão Financeira:** Integração com Stripe para assinaturas e cobrança baseada em uso (por atleta ativo).
