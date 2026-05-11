@@ -3,7 +3,7 @@
 import { personalConfig } from "@/lib/mockConfig";
 import { Button } from "@/components/ui/Button";
 import { ScheduleModule } from "@/components/ScheduleModule";
-import { Mountain, ChevronRight, Target, Zap, Shield, Calendar, ArrowRight, CheckCircle2, User, Briefcase } from "lucide-react";
+import { Mountain, Target, Zap, Shield, CheckCircle2, User, Briefcase } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 

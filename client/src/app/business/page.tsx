@@ -2,7 +2,6 @@
 
 import { Mountain, CheckCircle2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { motion } from "framer-motion";
 
 export default function BusinessPage() {
   return (
