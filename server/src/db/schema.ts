@@ -1,8 +1,25 @@
 import { pgTable, uuid, text, timestamp, integer, jsonb, numeric, boolean } from "drizzle-orm/pg-core";
 
+export const profiles = pgTable("profiles", {
+  id: text("id").primaryKey(), // Privy DID
+  xp: integer("xp").default(0).notNull(),
+  level: integer("level").default(1).notNull(),
+  lastLoginAt: timestamp("last_login_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const gamificationLogs = pgTable("gamification_logs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  profileId: text("profile_id").references(() => profiles.id).notNull(),
+  points: integer("points").notNull(),
+  reason: text("reason").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const personals = pgTable("personals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id").notNull(),
+  userId: text("user_id").references(() => profiles.id).notNull(),
   slug: text("slug").unique().notNull(), // URL amigável para White Label
   brandName: text("brand_name").notNull(),
   primaryColor: text("primary_color").default("#000000"),
@@ -21,7 +38,7 @@ export const personals = pgTable("personals", {
 
 export const athletes = pgTable("athletes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id").notNull(),
+  userId: text("user_id").references(() => profiles.id).notNull(),
   personalId: uuid("personal_id").references(() => personals.id),
   vGradeLevel: text("v_grade_level"),
   frenchGradeLevel: text("french_grade_level"),
