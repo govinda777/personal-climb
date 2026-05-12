@@ -1,5 +1,5 @@
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
 
 export default function MarketingLayout({
   children,
@@ -14,7 +14,7 @@ export default function MarketingLayout({
             PERSONAL<span className="text-amber-500">CLIMB</span>
           </div>
           <nav className="hidden md:flex space-x-8 text-sm font-medium text-white/70">
-             <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
             <Link href="/business" className="hover:text-white transition-colors">For Gyms</Link>
             <Link href="/p/govinda" className="hover:text-white transition-colors">Profiles</Link>
           </nav>
