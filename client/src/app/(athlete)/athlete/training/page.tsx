@@ -22,7 +22,7 @@ export default function TrainingPlayer() {
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50 p-6">
       <header className="flex flex-col gap-6 mb-8">
         <div className="flex justify-between items-center">
-          <Link href="/personal/govinda" className="p-2 -ml-2 text-zinc-500 hover:text-white transition-colors">
+          <Link href="/p/govinda" className="p-2 -ml-2 text-zinc-500 hover:text-white transition-colors">
             <ChevronLeft className="w-6 h-6" />
           </Link>
           <Button

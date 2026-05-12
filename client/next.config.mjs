@@ -4,7 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: '/personal-climb',
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '/personal-climb',
   trailingSlash: true,
 };
 

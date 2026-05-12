@@ -66,7 +66,7 @@ export default function Home() {
             {personalConfig.heroSubtitle}
           </p>
           <div className="flex flex-wrap justify-center gap-6 pt-12">
-            <Link href="/personal/govinda">
+            <Link href="/p/govinda">
               <Button size="lg" className="bg-white text-black hover:bg-zinc-200 h-16 px-12 rounded-none font-black italic text-xl uppercase tracking-tighter group">
                 <User className="mr-2 w-5 h-5" /> Sou Aluno
               </Button>

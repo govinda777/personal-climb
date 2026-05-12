@@ -51,7 +51,7 @@ export function UserTypeModal({ isOpen, onClose }: UserTypeModalProps) {
               transition={{ delay: 0.2 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-6"
             >
-              <Link href="/personal/govinda" onClick={onClose} className="group">
+              <Link href="/p/govinda" onClick={onClose} className="group">
                 <div className="bg-white hover:bg-zinc-200 transition-all p-12 h-full flex flex-col items-center justify-center gap-6 group-hover:scale-[1.02] active:scale-[0.98]">
                   <User className="w-16 h-16 text-black" />
                   <span className="text-3xl font-black italic uppercase text-black tracking-tighter">
