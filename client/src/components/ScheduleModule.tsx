@@ -4,13 +4,14 @@ import { useState } from 'react';
 import { Button } from "@/components/ui/Button";
 import { Calendar as CalendarIcon, Clock, CheckCircle2 } from "lucide-react";
 
+// Static arrays hoisted outside the component to prevent reallocation on every render
+const days = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+const slots = ["08:00", "10:00", "14:00", "16:00", "18:00", "20:00"];
+
 export function ScheduleModule() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isConfirmed, setIsConfirmed] = useState(false);
-
-  const days = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
-  const slots = ["08:00", "10:00", "14:00", "16:00", "18:00", "20:00"];
 
   const handleConfirm = () => {
     if (selectedDay && selectedSlot) {
