@@ -18,7 +18,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           accentColor: '#ffffff',
           logo: 'https://github.com/govinda777.png', // Placeholder or brand logo
         },
-        loginMethods: ['email', 'wallet', 'google', 'apple'],
+        loginMethods: ['email'],
       }}
     >
       {children}
