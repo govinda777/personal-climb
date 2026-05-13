@@ -1,4 +1,4 @@
-import Home from '@/app/(marketing)/page';
+import PersonalProfileView from '@/components/PersonalProfileView';
 
 export function generateStaticParams() {
   return [
@@ -9,10 +9,5 @@ export function generateStaticParams() {
 
 export default async function PersonalPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-
-  // No futuro, aqui buscaremos as configurações do personal pelo slug
-  // Por enquanto, renderizamos a Home com o mock de sempre
-  console.log(`Carregando perfil para: ${slug}`);
-
-  return <Home />;
+  return <PersonalProfileView slug={slug} />;
 }

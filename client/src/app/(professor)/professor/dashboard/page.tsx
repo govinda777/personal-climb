@@ -1,11 +1,73 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/Button";
 import { Users, AlertTriangle, TrendingUp, Clock } from "lucide-react";
+import { usePrivy } from '@privy-io/react-auth';
+import { fetchProfessorDashboard } from '@/lib/api';
 
 export default function ProfessorDashboard() {
-  const students = [
-    { id: 1, name: "Ana Silva", status: "pending", lastTrain: "1 dia atrás", grade: "V6" },
-    { id: 2, name: "Lucas Melo", status: "active", lastTrain: "4 dias atrás", grade: "V8", alert: true },
-    { id: 3, name: "Bia Costa", status: "pending", lastTrain: "Hoje", grade: "V4" },
+  const { authenticated, getAccessToken, login } = usePrivy();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadDashboard() {
+      if (!authenticated) {
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const token = await getAccessToken();
+        const dashData = await fetchProfessorDashboard(token || '');
+        setData(dashData);
+      } catch (err) {
+        console.error('Failed to load dashboard', err);
+        setError('Falha ao carregar dashboard. Verifique sua conexão ou status de personal.');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadDashboard();
+  }, [authenticated, getAccessToken]);
+
+  if (!authenticated) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50">
+        <p className="mb-4 text-zinc-600 font-medium">Faça login para acessar o painel do treinador.</p>
+        <Button onClick={login}>Login</Button>
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50">
+        <span className="animate-pulse font-bold text-zinc-500 uppercase tracking-widest">Carregando Dashboard...</span>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50">
+        <AlertTriangle className="w-12 h-12 text-red-500 mb-4" />
+        <p className="text-zinc-700 font-medium">{error}</p>
+      </div>
+    );
+  }
+
+  const { personal, stats, students } = data;
+
+  const statCards = [
+    { label: "Total Alunos", value: stats.totalAthletes, icon: Users },
+    { label: "Aguardando Aprovação", value: stats.pendingApproval, icon: Clock, color: "text-amber-500" },
+    { label: "Inativos (>3 dias)", value: stats.inactiveStudents, icon: AlertTriangle, color: "text-red-500" },
+    { label: "Taxa de Evolução", value: stats.evolutionRate, icon: TrendingUp, color: "text-emerald-500" },
   ];
 
   return (
@@ -13,7 +75,7 @@ export default function ProfessorDashboard() {
       <nav className="p-6 bg-white border-b border-zinc-200 flex justify-between items-center">
         <h1 className="font-bold text-xl tracking-tighter uppercase">Painel do Treinador</h1>
         <div className="flex items-center gap-4">
-          <span className="text-sm font-medium text-zinc-500">Treinador: Academia Boulder</span>
+          <span className="text-sm font-medium text-zinc-500">Treinador: {personal.brandName}</span>
           <div className="w-10 h-10 bg-zinc-200 rounded-full" />
         </div>
       </nav>
@@ -21,12 +83,7 @@ export default function ProfessorDashboard() {
       <main className="p-8 max-w-7xl mx-auto w-full space-y-8">
         {/* Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {[
-            { label: "Total Alunos", value: "42", icon: Users },
-            { label: "Aguardando Aprovação", value: "5", icon: Clock, color: "text-amber-500" },
-            { label: "Inativos (>3 dias)", value: "12", icon: AlertTriangle, color: "text-red-500" },
-            { label: "Taxa de Evolução", value: "+12%", icon: TrendingUp, color: "text-emerald-500" },
-          ].map((stat, i) => (
+          {statCards.map((stat, i) => (
             <div key={i} className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm">
               <div className="flex justify-between items-start">
                 <p className="text-zinc-500 text-sm font-medium">{stat.label}</p>
@@ -54,7 +111,15 @@ export default function ProfessorDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-100">
-                {students.map((student) => (
+                {students.length === 0 ? (
+                  <tr>
+                    <td colSpan={4} className="px-6 py-8 text-center text-zinc-500 font-medium">
+                      Nenhum aluno cadastrado ainda. Compartilhe seu link de hotsite!
+                    </td>
+                  </tr>
+                ) :
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                students.map((student: any) => (
                   <tr key={student.id} className="hover:bg-zinc-50 transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
