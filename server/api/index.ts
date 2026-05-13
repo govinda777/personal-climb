@@ -1,5 +1,7 @@
 import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
+import { z } from 'zod'
+import { zValidator } from '@hono/zod-validator'
 
 export const config = {
   runtime: 'edge'
@@ -14,8 +16,13 @@ app.get('/hello', (c) => {
 })
 
 // Check-in Route
-app.post('/checkin', async (c) => {
-  const { athleteId, slotId } = await c.req.json()
+const checkinSchema = z.object({
+  athleteId: z.string().uuid(),
+  slotId: z.string().uuid()
+})
+
+app.post('/checkin', zValidator('json', checkinSchema), async (c) => {
+  const { athleteId, slotId } = c.req.valid('json')
   // Logic to save in DB...
   return c.json({ status: 'success', message: 'Check-in confirmed' })
 })
