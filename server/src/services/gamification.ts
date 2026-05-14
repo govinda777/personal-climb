@@ -1,5 +1,5 @@
 import { profiles, gamificationLogs } from "../db/schema";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, desc } from "drizzle-orm";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import * as schema from "../db/schema";
 import { GAMIFICATION_CONFIG } from "../lib/gamification";
@@ -30,8 +30,36 @@ export class GamificationService {
     return newProfile;
   }
 
-  async addXP(userId: string, points: number, reason: string) {
+  async canEarnXP(userId: string, reason: string, cooldownHours: number): Promise<boolean> {
+    const logs = await this.db
+      .select()
+      .from(gamificationLogs)
+      .where(and(
+        eq(gamificationLogs.profileId, userId),
+        eq(gamificationLogs.reason, reason)
+      ))
+      .orderBy(desc(gamificationLogs.createdAt))
+      .limit(1);
+
+    if (logs.length === 0) return true;
+
+    const lastLog = logs[0];
+    const now = new Date();
+    const hoursSinceLastAction = (now.getTime() - lastLog.createdAt.getTime()) / (1000 * 60 * 60);
+
+    return hoursSinceLastAction >= cooldownHours;
+  }
+
+  async addXP(userId: string, points: number, reason: string, cooldownHours: number = 0) {
     const profile = await this.getOrCreateProfile(userId);
+
+    if (cooldownHours > 0) {
+      const canEarn = await this.canEarnXP(userId, reason, cooldownHours);
+      if (!canEarn) {
+        throw new Error(`Rate limit exceeded for action: ${reason}. Cooldown is ${cooldownHours} hours.`);
+      }
+    }
+
     const newXP = profile.xp + points;
 
     const newLevel = GAMIFICATION_CONFIG.LEVEL_FORMULA(newXP);
