@@ -1,11 +1,11 @@
 import { profiles, gamificationLogs } from "../db/schema";
 import { eq, and, sql } from "drizzle-orm";
-import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import type { NeonHttpDatabase } from "drizzle-orm/neon-http";
 import * as schema from "../db/schema";
 import { GAMIFICATION_CONFIG } from "../lib/gamification";
 
 export class GamificationService {
-  constructor(private db: NodePgDatabase<typeof schema>) {}
+  constructor(private db: NeonHttpDatabase<typeof schema>) {}
 
   async getOrCreateProfile(userId: string) {
     const existing = await this.db
@@ -27,12 +27,16 @@ export class GamificationService {
       })
       .returning();
 
+    if (!newProfile) {
+      throw new Error(`Failed to create profile for user ${userId}`);
+    }
+
     return newProfile;
   }
 
   async addXP(userId: string, points: number, reason: string) {
     const profile = await this.getOrCreateProfile(userId);
-    const newXP = profile.xp + points;
+    const newXP = profile!.xp + points;
 
     const newLevel = GAMIFICATION_CONFIG.LEVEL_FORMULA(newXP);
 
@@ -45,6 +49,10 @@ export class GamificationService {
       })
       .where(eq(profiles.id, userId))
       .returning();
+
+    if (!updatedProfile) {
+      throw new Error(`Failed to update profile for user ${userId}`);
+    }
 
     await this.db.insert(gamificationLogs).values({
       profileId: userId,
@@ -60,7 +68,7 @@ export class GamificationService {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const lastLogin = profile.lastLoginAt;
+    const lastLogin = profile!.lastLoginAt;
     const lastLoginDate = lastLogin ? new Date(lastLogin.getFullYear(), lastLogin.getMonth(), lastLogin.getDate()) : null;
 
     if (!lastLoginDate || lastLoginDate < today) {
@@ -73,6 +81,6 @@ export class GamificationService {
       return { ...updated, awarded: true };
     }
 
-    return { ...profile, awarded: false };
+    return { ...profile!, awarded: false };
   }
 }

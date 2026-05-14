@@ -1,5 +1,5 @@
 export const personalConfig = {
-  brandName: "Academia Boulder",
+  brandName: "Personal Climb",
   personalName: "Govinda",
   primaryColor: "#ef4444", // Red-500
   heroTitle: "EVOLUA SUA ESCALADA AO LIMITE",

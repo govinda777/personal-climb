@@ -9,8 +9,26 @@ import Link from "next/link";
 import { UserTypeModal } from "@/components/UserTypeModal";
 import { useState, useEffect } from "react";
 
-export default function Home() {
+interface Package {
+  name: string;
+  price: string;
+  features: string[];
+}
+
+interface PersonalData {
+  brandName: string;
+  personalName: string;
+  primaryColor: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  packages: Package[];
+  trainingPhilosophy?: string;
+  philosophy?: string;
+}
+
+export default function Home({ personalData }: { personalData?: PersonalData }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const config = (personalData || personalConfig) as PersonalData;
 
   useEffect(() => {
     const hasSeenModal = sessionStorage.getItem("hasSeenUserTypeModal");
@@ -32,7 +50,7 @@ export default function Home() {
           <div className="bg-white text-black p-1 rounded-sm">
             <Mountain className="w-5 h-5" />
           </div>
-          <span>{personalConfig.brandName.toUpperCase()}</span>
+          <span>{config.brandName.toUpperCase()}</span>
         </div>
         <div className="hidden md:flex gap-10 text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500">
           <a href="#metodologia" className="hover:text-white transition-colors">Protocolo</a>
@@ -58,12 +76,12 @@ export default function Home() {
             </span>
           </div>
           <h1 className="text-7xl md:text-[12rem] font-black tracking-tighter leading-[0.8] italic uppercase">
-            {personalConfig.heroTitle.split(' ').map((word, i) => (
+            {config.heroTitle ? config.heroTitle.split(' ').map((word: string, i: number) => (
               <span key={i} className={i % 2 === 1 ? "text-zinc-800" : ""}>{word} </span>
-            ))}
+            )) : "CLIMB HARDER"}
           </h1>
           <p className="text-lg md:text-xl text-zinc-500 max-w-2xl mx-auto font-bold italic uppercase tracking-tight">
-            {personalConfig.heroSubtitle}
+            {config.heroSubtitle || "Welcome to the ultimate platform"}
           </p>
           <div className="flex flex-wrap justify-center gap-6 pt-12">
             <Link href="/p/govinda">
@@ -111,7 +129,7 @@ export default function Home() {
               Nosso <br/><span className="text-zinc-800">Protocolo.</span>
             </h2>
             <p className="text-zinc-500 max-w-md font-bold italic uppercase text-right">
-              {personalConfig.philosophy}
+              {config.trainingPhilosophy || config.philosophy}
             </p>
           </div>
 
@@ -140,7 +158,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {personalConfig.packages.map((pkg, i) => (
+            {(config.packages || personalConfig.packages).map((pkg: Package, i: number) => (
               <div key={i} className="relative group overflow-hidden border border-white/5 bg-zinc-900/30 p-12">
                 <div className="absolute top-0 right-0 p-8 text-8xl font-black text-white/5 italic select-none group-hover:text-white/10 transition-colors">
                   0{i+1}
@@ -148,7 +166,7 @@ export default function Home() {
                 <h3 className="text-4xl font-black italic uppercase mb-2">{pkg.name}</h3>
                 <div className="text-6xl font-black tracking-tighter mb-12">{pkg.price}</div>
                 <div className="space-y-4 mb-12">
-                  {pkg.features.map((f, j) => (
+                  {pkg.features.map((f: string, j: number) => (
                     <div key={j} className="flex items-center gap-3 text-zinc-400 font-bold italic uppercase text-[10px] tracking-widest">
                       <div className="w-1 h-1 bg-zinc-700" /> {f}
                     </div>
@@ -193,7 +211,7 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-24 pt-12 border-t border-white/5 text-center text-[10px] font-black text-zinc-800 uppercase tracking-[0.5em]">
-          © 2024 {personalConfig.brandName} {"//"} Powered by Personal Climb OS
+          © 2024 {config.brandName} {"//"} Powered by Personal Climb OS
         </div>
       </footer>
     </div>

@@ -5,12 +5,12 @@
   "private": true,
   "scripts": {
     "dev": "bun run --hot src/index.ts",
+    "build": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "@types/pg": "^8.11.0",
     "drizzle-kit": "^0.30.0"
   },
   "peerDependencies": {
@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.13.0",
+    "@neondatabase/serverless": "^1.1.0",
     "@privy-io/server-auth": "^1.32.5",
     "drizzle-orm": "^0.38.0",
-    "hono": "^4.6.0",
-    "pg": "^8.11.0"
+    "hono": "^4.6.0"
   }
 }
