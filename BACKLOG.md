@@ -25,9 +25,9 @@ Estes são os fluxos principais que já estão sendo atacados e formam a base da
 
 ---
 
-## ⚠️ Backlog de Desenvolvimento (A Implementar)
+## ✅ Casos de Uso Concluídos (Fase 2 - Atual)
 
-Abaixo estão os casos de uso mapeados e estruturados pelas principais jornadas, aguardando desenvolvimento.
+Abaixo estão os casos de uso recentemente implementados e estruturados pelas principais jornadas.
 
 ### 🏋️ Jornada do Personal (Dashboard & Configurações)
 

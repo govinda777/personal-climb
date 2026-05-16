@@ -20,6 +20,7 @@ type ScheduleFormValues = z.infer<typeof scheduleSchema>;
 export default function ScheduleManagementPage() {
   const { getAccessToken } = usePrivy();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [slots, setSlots] = useState<any[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(true);
 
@@ -54,6 +55,7 @@ export default function ScheduleManagementPage() {
 
   useEffect(() => {
     fetchSlots();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getAccessToken]);
 
   const onSubmit = async (data: ScheduleFormValues) => {

@@ -67,8 +67,12 @@ export default function ProtocolConfigPage() {
       }
 
       setSuccessMessage('Protocolo de IA atualizado com sucesso!');
-    } catch (error: any) {
-      setErrorMessage(error.message || 'Erro inesperado.');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('Erro inesperado.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -85,7 +89,7 @@ export default function ProtocolConfigPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         <div>
           <label className="block text-sm font-medium text-zinc-900 mb-2">Filosofia de Treino (Prompt Customizado)</label>
-          <p className="text-xs text-zinc-500 mb-2">Instruções explícitas de como a IA deve montar os treinos. Ex: "Priorizar sempre mobilidade no aquecimento. Não receitar exercícios de força máxima se o aluno relatar dor articular."</p>
+          <p className="text-xs text-zinc-500 mb-2">Instruções explícitas de como a IA deve montar os treinos. Ex: &quot;Priorizar sempre mobilidade no aquecimento. Não receitar exercícios de força máxima se o aluno relatar dor articular.&quot;</p>
           <textarea
             {...register('trainingPhilosophy')}
             rows={6}

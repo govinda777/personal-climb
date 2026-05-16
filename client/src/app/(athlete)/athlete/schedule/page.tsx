@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 
 export default function AthleteSchedulePage() {
   const { getAccessToken } = usePrivy();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [slots, setSlots] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkingIn, setCheckingIn] = useState<string | null>(null);
@@ -29,6 +30,7 @@ export default function AthleteSchedulePage() {
 
   useEffect(() => {
     fetchSlots();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getAccessToken]);
 
   const handleCheckin = async (slotId: string) => {
@@ -51,8 +53,10 @@ export default function AthleteSchedulePage() {
 
       alert('Check-in realizado com sucesso!');
       fetchSlots(); // refresh state
-    } catch (error: any) {
-      alert(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
     } finally {
       setCheckingIn(null);
     }

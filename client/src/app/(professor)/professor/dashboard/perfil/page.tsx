@@ -55,8 +55,12 @@ export default function PerfilConfigPage() {
       }
 
       setSuccessMessage('Perfil atualizado com sucesso!');
-    } catch (error: any) {
-      setErrorMessage(error.message || 'Erro inesperado.');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('Erro inesperado.');
+      }
     } finally {
       setIsSubmitting(false);
     }

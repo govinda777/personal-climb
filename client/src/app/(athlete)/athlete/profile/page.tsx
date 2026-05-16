@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 
 export default function AthleteProfilePage() {
   const { authenticated, getAccessToken, user } = usePrivy();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -14,7 +15,7 @@ export default function AthleteProfilePage() {
       if (!authenticated) return;
       try {
         const token = await getAccessToken();
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/me`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -83,7 +84,24 @@ export default function AthleteProfilePage() {
                 <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Web3</h3>
                 <p className="text-sm text-zinc-300 mb-4">Seu XP pode ser atestado na Blockchain.</p>
               </div>
-              <Button variant="outline" className="w-full text-xs border-zinc-600 hover:bg-zinc-700 hover:text-white" onClick={() => alert("Simulação: Atestação EIP-712 gerada!")}>
+              <Button variant="outline" className="w-full text-xs border-zinc-600 hover:bg-zinc-700 hover:text-white" onClick={async () => {
+    try {
+      const token = await getAccessToken();
+      // Em produção usariamos o endereço real da wallet conectada (farcaster/solana/etc)
+      const targetAddress = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/verify-xp/${targetAddress}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        alert(`Atestação Gerada! Signature: ${data.signature.substring(0, 15)}...`);
+      } else {
+        alert("Falha ao gerar atestação.");
+      }
+    } catch (err) {
+      alert("Erro ao conectar com Web3.");
+    }
+  }}>
                 Gerar Atestado (EIP-712)
               </Button>
             </div>

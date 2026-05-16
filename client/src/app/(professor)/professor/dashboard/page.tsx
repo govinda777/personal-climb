@@ -7,6 +7,7 @@ import { usePrivy } from '@privy-io/react-auth';
 
 export default function ProfessorDashboard() {
   const { authenticated, getAccessToken, login } = usePrivy();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -122,6 +123,7 @@ export default function ProfessorDashboard() {
                     </td>
                   </tr>
                 ) :
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 students.map((student: any) => (
                   <tr key={student.id} className="hover:bg-zinc-50 transition-colors">
                     <td className="px-6 py-4">

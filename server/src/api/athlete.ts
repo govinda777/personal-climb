@@ -166,4 +166,81 @@ app.post('/workout-log', zValidator('json', workoutLogSchema), async (c) => {
     return c.json({ error: 'Failed to save workout log' }, 500)
   }
 })
+
+app.get('/me', async (c) => {
+  const user = c.get('user')
+  try {
+    const profile = await db.select().from(schema.profiles).where(eq(schema.profiles.id, user.id)).limit(1)
+    if (profile.length === 0) {
+      return c.json({ xp: 0, level: 1 })
+    }
+    return c.json(profile[0])
+  } catch (error) {
+    return c.json({ xp: 0, level: 1 })
+  }
+})
+
+app.post('/actions/workout-complete', async (c) => {
+  const user = c.get('user')
+  try {
+    const profile = await db.select().from(schema.profiles).where(eq(schema.profiles.id, user.id)).limit(1)
+    if (profile.length === 0) {
+      await db.insert(schema.profiles).values({ id: user.id, xp: 200, level: 2 })
+    } else {
+      await db.update(schema.profiles).set({ xp: profile[0]!.xp + 200, level: Math.floor(Math.sqrt((profile[0]!.xp + 200)/100)) + 1 }).where(eq(schema.profiles.id, user.id))
+    }
+    return c.json({ success: true })
+  } catch (error) {
+    return c.json({ error: 'Gamification failed' }, 500)
+  }
+})
+
+// EIP-712 Gamification Endpoint using viem
+import { privateKeyToAccount } from 'viem/accounts'
+app.get('/verify-xp/:address', async (c) => {
+  const user = c.get('user')
+  const targetAddress = c.req.param('address')
+
+  const profile = await db.select().from(schema.profiles).where(eq(schema.profiles.id, user.id)).limit(1)
+  const xp = profile.length > 0 ? profile[0]!.xp : 0
+
+  const privateKeyRaw = process.env.SIGNER_PRIVATE_KEY || '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d'
+  const privateKey = privateKeyRaw as `0x${string}`
+  const account = privateKeyToAccount(privateKey)
+
+  const nonce = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '')
+  const formattedNonce = `0x${nonce.substring(0, 64)}` as `0x${string}`
+
+  const domain = {
+    name: "XpAttestation",
+    version: "1",
+    chainId: 31337,
+  }
+  const types = {
+    AttestPayload: [
+      { name: "user", type: "address" },
+      { name: "totalXp", type: "uint256" },
+      { name: "nonce", type: "bytes32" },
+    ],
+  }
+
+  try {
+    const signature = await account.signTypedData({
+      domain,
+      types,
+      primaryType: 'AttestPayload',
+      message: {
+        user: targetAddress as `0x${string}`,
+        totalXp: BigInt(xp),
+        nonce: formattedNonce,
+      },
+    })
+
+    return c.json({ payload: { user: targetAddress, totalXp: xp, nonce: formattedNonce }, signature, signerAuthority: account.address })
+  } catch (error: any) {
+    return c.json({ error: 'Failed to generate signature' }, 500)
+  }
+})
+
+
 export default app

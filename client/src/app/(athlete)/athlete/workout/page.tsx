@@ -53,7 +53,7 @@ export default function WorkoutExecutionPage() {
       if (!logResponse.ok) throw new Error('Falha ao registrar treino');
 
       // 2. Acionar Gamificação
-      const gamificationResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/actions/workout-complete`, {
+      const gamificationResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/actions/workout-complete`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });
