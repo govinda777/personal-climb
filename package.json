@@ -2,9 +2,15 @@
   "name": "personal-climb-root",
   "private": true,
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "env:init": "node scripts/init-envs.js",
+    "db:up": "docker compose up -d || echo '⚠️ Warning: Docker not found or not running. Skipping database setup. Make sure you have a local PostgreSQL running at localhost:5432.'",
+    "dev": "concurrently \"cd client && npm run dev\" \"cd server && npm run dev\"",
+    "setup:local": "npm run install:all && npm run env:init && npm run db:up && npm run dev"
   },
   "devDependencies": {
+    "concurrently": "^9.1.0",
     "@nomicfoundation/hardhat-toolbox": "^6.1.2",
     "@openzeppelin/contracts": "^5.6.1",
     "@types/chai": "^4.3.20",
