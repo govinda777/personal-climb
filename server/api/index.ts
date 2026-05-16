@@ -6,7 +6,7 @@ import professorApp from '../src/api/professor'
 import athleteApp from '../src/api/athlete'
 
 export const config = {
-  runtime: 'edge'
+  runtime: 'nodejs'
 }
 
 const app = new Hono().basePath('/api')

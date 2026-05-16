@@ -168,7 +168,7 @@ app.get('/plans', async (c) => {
       // Assuming a simple structure for now.
       return {
         ...plan,
-        athleteName: athleteList.length > 0 ? athleteList[0].userId : 'Unknown Athlete'
+        athleteName: athleteList.length > 0 ? athleteList[0]!.userId : 'Unknown Athlete'
       }
     }))
 
