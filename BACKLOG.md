@@ -39,19 +39,22 @@ Tarefas focadas na experiência, parametrização e gestão do treinador.
   - **Critérios de Aceite:** Validação eficiente para evitar overbooking, delegando para constraints e isolamento padrão do PostgreSQL (sem necessidade imediata de filas assíncronas custosas, dado o volume inicialmente projetado).
 - [ ] **UC09: CRM e Dashboard de Atletas**
   - **Descrição:** Painel analítico onde o treinador visualiza uma lista geral de seus alunos ativos (`athletes.isActive = true`), os respectivos níveis técnicos, status de pagamentos, taxas de adesão aos treinos e métricas de evolução.
+- [ ] **UC15: Base de Conhecimento do Treinador (Sanity CMS)**
+  - **Descrição:** O treinador poderá pré-cadastrar exercícios e blocos de treino no Sanity CMS. Esta base servirá como biblioteca e insumo estrito para as decisões do Agente de IA na montagem das sessões.
+  - **Critérios de Aceite:** Criação e integração dos schemas (e.g., `exercise.ts`, `trainingBlock.ts`) no Sanity Studio, com consultas otimizadas via GROQ disponibilizadas para o backend (Hono).
 
 ---
 
-## 🤖 Épico 3: Inteligência Artificial (Gemini) & Prescrição
+## 🤖 Épico 3: Agente de Inteligência Artificial (Gemini) & Prescrição
 
-Desenvolvimento da inteligência de geração e controle do treinamento físico.
+Desenvolvimento da inteligência de geração e controle do treinamento físico, evoluída para o paradigma de Agentes autônomos.
 
 - [ ] **UC07: Definição do Protocolo de Treino (Setup da IA)**
   - **Descrição:** Tela para configuração do "prompt customizado" do treinador. Envolve definir as métricas preferidas para avaliação, regras de ouro do treinador e limitações padrões de equipamento.
   - **Critérios de Aceite:** O payload de configuração deve ser versionado no banco. Estruturar inputs flexíveis que alimentem o prompt de sistema do Google Gemini de forma determinística.
 - [ ] **UC10: Revisão e Aprovação de Treinos (Human-in-the-loop IA)**
-  - **Descrição:** Interface para o treinador revisar o racional da IA. O treinador recebe sugestões estruturadas (análise de perfil, sessões e intensidades) do Gemini e pode aprovar (`training_plans.status = "approved"`) ou editar manualmente.
-  - **Critérios de Aceite:** Implementar fallback mode. Se a API do Gemini falhar (timeout ou erro de output), exibir feedback visual claro ao usuário e recuar para a geração de "treino template estático", impedindo o bloqueio da esteira do treinador.
+  - **Descrição:** O Agente atuará de forma ativa: ele vai ler o contexto (dados e anamnese do atleta + conversa/protocolo com o treinador), cruzar com a base de exercícios (Sanity), gerar o treino dinamicamente, *pré-cadastrá-lo* no CMS/DB, e solicitar a aprovação. O treinador recebe sugestões estruturadas e pode aprovar ou editar manualmente.
+  - **Critérios de Aceite:** Implementar tool calling no LLM (Gemini) para interagir com o Sanity/Drizzle. Se a API do Gemini falhar (timeout ou erro de output), exibir feedback visual claro ao usuário e recuar para a geração de "treino template estático", impedindo o bloqueio da esteira do treinador.
 
 ---
 
