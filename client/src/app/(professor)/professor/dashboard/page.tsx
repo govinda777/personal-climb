@@ -4,11 +4,9 @@ import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/Button";
 import { Users, AlertTriangle, TrendingUp, Clock } from "lucide-react";
 import { usePrivy } from '@privy-io/react-auth';
-import { fetchProfessorDashboard } from '@/lib/api';
 
 export default function ProfessorDashboard() {
   const { authenticated, getAccessToken, login } = usePrivy();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -22,11 +20,17 @@ export default function ProfessorDashboard() {
 
       try {
         const token = await getAccessToken();
-        const dashData = await fetchProfessorDashboard(token || '');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/professor/dashboard`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (!response.ok) throw new Error('Failed to fetch dashboard data');
+
+        const dashData = await response.json();
         setData(dashData);
       } catch (err) {
         console.error('Failed to load dashboard', err);
-        setError('Falha ao carregar dashboard. Verifique sua conexão ou status de personal.');
+        setError('Falha ao carregar dashboard. Verifique sua conexão ou se seu perfil de personal está completo.');
       } finally {
         setLoading(false);
       }
@@ -52,11 +56,11 @@ export default function ProfessorDashboard() {
     );
   }
 
-  if (error || !data) {
+  if (error || !data || data.error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-50">
         <AlertTriangle className="w-12 h-12 text-red-500 mb-4" />
-        <p className="text-zinc-700 font-medium">{error}</p>
+        <p className="text-zinc-700 font-medium">{error || data?.error}</p>
       </div>
     );
   }
@@ -118,7 +122,6 @@ export default function ProfessorDashboard() {
                     </td>
                   </tr>
                 ) :
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 students.map((student: any) => (
                   <tr key={student.id} className="hover:bg-zinc-50 transition-colors">
                     <td className="px-6 py-4">
@@ -136,7 +139,7 @@ export default function ProfessorDashboard() {
                     <td className="px-6 py-4"><span className="font-mono bg-zinc-100 px-2 py-1 rounded">{student.grade}</span></td>
                     <td className="px-6 py-4 text-right">
                       {student.status === "pending" ? (
-                        <Button size="sm" className="bg-amber-500 hover:bg-amber-600">Aprovar Treino IA</Button>
+                        <Button size="sm" className="bg-amber-500 hover:bg-amber-600" onClick={() => window.location.href='/professor/dashboard/plans'}>Aprovar Treino IA</Button>
                       ) : (
                         <Button variant="outline" size="sm">Ver Perfil</Button>
                       )}

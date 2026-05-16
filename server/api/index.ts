@@ -2,6 +2,8 @@ import { Hono } from 'hono'
 import { handle } from 'hono/vercel'
 import { z } from 'zod'
 import { zValidator } from '@hono/zod-validator'
+import professorApp from '../src/api/professor'
+import athleteApp from '../src/api/athlete'
 
 export const config = {
   runtime: 'edge'
@@ -9,22 +11,13 @@ export const config = {
 
 const app = new Hono().basePath('/api')
 
+app.route('/professor', professorApp)
+app.route('/athlete', athleteApp)
+
 app.get('/hello', (c) => {
   return c.json({
     message: 'Hello from Personal Climb API on Vercel!',
   })
-})
-
-// Check-in Route
-const checkinSchema = z.object({
-  athleteId: z.string().uuid(),
-  slotId: z.string().uuid()
-})
-
-app.post('/checkin', zValidator('json', checkinSchema), async (c) => {
-  const { athleteId, slotId } = c.req.valid('json')
-  // Logic to save in DB...
-  return c.json({ status: 'success', message: 'Check-in confirmed' })
 })
 
 export default handle(app)

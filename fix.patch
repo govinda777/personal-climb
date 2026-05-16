@@ -1,0 +1,18 @@
+--- client/src/app/(athlete)/athlete/workout/page.tsx
++++ client/src/app/(athlete)/athlete/workout/page.tsx
+@@ -48,11 +48,14 @@
+       if (!logResponse.ok) throw new Error('Falha ao registrar treino');
+
+       // 2. Acionar Gamificação
+-      await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/actions/workout-complete`, {
++      const gamificationResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/actions/workout-complete`, {
+         method: 'POST',
+         headers: { Authorization: `Bearer ${token}` }
+       });
+
++      if (!gamificationResponse.ok) {
++         // Ignora erro de gamificação por enquanto ou loga
++      }
+       setSuccess(true);
+     } catch (error) {
+       console.error(error);
