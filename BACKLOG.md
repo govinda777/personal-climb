@@ -14,8 +14,8 @@ Esta seção mapeia os fluxos fundamentais de fundação e negócios principais 
   - Redirecionamento inteligente na landing page entre Aluno (Hotsite White-label) e Personal (Produto Business).
   - *Técnico:* Modal exibido na página inicial e estado salvo em `sessionStorage` (`hasSeenUserTypeModal`).
 - [x] **UC02: Autenticação Universal (Privy)**
-  - Login exclusivo via email (OTP/Magic Link passwordless).
-  - *Técnico:* Integração `@privy-io/react-auth` no front e `@privy-io/server-auth` no back. Identificador principal é o DID do Privy no banco (SQL/Postgres).
+  - Login exclusivo via email (OTP/Magic Link passwordless), com provisionamento invisível de carteira Web3 (Embedded Wallet) gerada automaticamente para o usuário.
+  - *Técnico:* Integração `@privy-io/react-auth` no front com flag `createOnLogin` habilitada para embedded wallets. O identificador principal é o DID do Privy no banco (SQL/Postgres).
 - [x] **UC03: Assinatura e Pagamentos (Stripe Checkout)**
   - Contratação de pacotes de treinamento pelo atleta no Hotsite do treinador.
 - [x] **UC04: Gestão de Assinaturas (Billing Tracker)**
