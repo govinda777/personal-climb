@@ -1,0 +1,11 @@
+--- server/src/middleware/auth.ts
++++ server/src/middleware/auth.ts
+@@ -15,7 +15,7 @@
+       return c.json({ error: 'Missing authorization header' }, 401)
+     }
+
+-    const verifiedClaims = await privyClient.verifySession(token)
++    const verifiedClaims = await privyClient.verifyAuthToken(token)
+     if (!verifiedClaims) {
+       return c.json({ error: 'Invalid token' }, 401)
+     }

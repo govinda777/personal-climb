@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button';
 
 const rpeSchema = z.object({
   sessionId: z.string().uuid('Sessão inválida.'), // Na prática isso viria da rota/contexto
-  rpe: z.coerce.number().int().min(1).max(10, 'RPE deve ser entre 1 e 10'),
+  rpe: z.any().transform(Number).refine(val => Number.isInteger(val) && val >= 1 && val <= 10, 'RPE deve ser entre 1 e 10'),
   feeling: z.string().optional(),
 });
 

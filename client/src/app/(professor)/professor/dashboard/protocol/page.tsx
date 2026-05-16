@@ -10,10 +10,10 @@ import { Button } from '@/components/ui/Button';
 const protocolSchema = z.object({
   trainingPhilosophy: z.string().min(10, 'A metodologia deve ter pelo menos 10 caracteres.'),
   evaluationMetrics: z.object({
-    focusOnEndurance: z.boolean().default(false),
-    focusOnPower: z.boolean().default(false),
-    focusOnMobility: z.boolean().default(false),
-    allowedEquipment: z.array(z.string()).default([]),
+    focusOnEndurance: z.boolean(),
+    focusOnPower: z.boolean(),
+    focusOnMobility: z.boolean(),
+    allowedEquipment: z.array(z.string()),
   }),
 });
 

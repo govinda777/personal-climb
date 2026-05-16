@@ -28,7 +28,7 @@ app.get('/slots', async (c) => {
     if (athleteList.length === 0) {
       return c.json({ error: 'Athlete not found' }, 404)
     }
-    const personalId = athleteList[0].personalId
+    const personalId = athleteList[0]!.personalId
     if (!personalId) {
       return c.json({ slots: [] }) // No personal assigned yet
     }
@@ -37,7 +37,7 @@ app.get('/slots', async (c) => {
 
     const enrichedSlots = await Promise.all(slots.map(async (slot) => {
       const bookings = await db.select().from(schema.checkins).where(eq(schema.checkins.slotId, slot.id))
-      const hasBooked = bookings.some(b => b.athleteId === athleteList[0].id)
+      const hasBooked = bookings.some(b => b!.athleteId === athleteList[0]!.id)
       return { ...slot, bookedCount: bookings.length, hasBooked }
     }))
 
@@ -61,21 +61,21 @@ app.post('/checkin', zValidator('json', checkinSchema), async (c) => {
     if (athleteList.length === 0) {
       return c.json({ error: 'Athlete not found' }, 404)
     }
-    const athleteId = athleteList[0].id
+    const athleteId = athleteList[0]!.id
 
     // Check capacity
     const slots = await db.select().from(schema.scheduleSlots).where(eq(schema.scheduleSlots.id, slotId)).limit(1)
     if (slots.length === 0) return c.json({ error: 'Slot not found' }, 404)
-    const slot = slots[0]
+    const slot = slots[0]!
 
     const existingBookings = await db.select().from(schema.checkins).where(eq(schema.checkins.slotId, slotId))
 
     // Check if already booked
-    if (existingBookings.some(b => b.athleteId === athleteId)) {
+    if (existingBookings.some(b => b!.athleteId === athleteId)) {
        return c.json({ error: 'Already booked this slot' }, 400)
     }
 
-    if (existingBookings.length >= slot.maxCapacity) {
+    if (existingBookings.length >= slot!.maxCapacity) {
       return c.json({ error: 'Slot is full' }, 400)
     }
 
@@ -111,7 +111,7 @@ app.post('/anamnesis', zValidator('json', anamnesisSchema), async (c) => {
     if (athleteList.length === 0) {
       return c.json({ error: 'Athlete not found' }, 404)
     }
-    const athleteId = athleteList[0].id
+    const athleteId = athleteList[0]!.id
 
     // Check if anamnesis already exists
     const existing = await db.select().from(schema.anamnesis).where(eq(schema.anamnesis.athleteId, athleteId)).limit(1)
@@ -121,7 +121,7 @@ app.post('/anamnesis', zValidator('json', anamnesisSchema), async (c) => {
       const [updated] = await db.update(schema.anamnesis).set({
         ...body,
         updatedAt: new Date()
-      }).where(eq(schema.anamnesis.id, existing[0].id)).returning()
+      }).where(eq(schema.anamnesis.id, existing[0]!.id)).returning()
       return c.json({ success: true, anamnesis: updated })
     }
 
@@ -151,7 +151,7 @@ app.post('/workout-log', zValidator('json', workoutLogSchema), async (c) => {
   try {
     const athleteList = await db.select().from(schema.athletes).where(eq(schema.athletes.userId, user.id)).limit(1)
     if (athleteList.length === 0) return c.json({ error: 'Athlete not found' }, 404)
-    const athleteId = athleteList[0].id
+    const athleteId = athleteList[0]!.id
 
     const [newLog] = await db.insert(schema.workoutLogs).values({
       athleteId,

@@ -10,12 +10,10 @@ import { Button } from '@/components/ui/Button';
 const anamnesisSchema = z.object({
   medicalRestrictions: z.string().optional(),
   goals: z.string().min(10, 'Descreva melhor seus objetivos (mínimo 10 caracteres).'),
-  weight: z.coerce.number().min(30, 'Peso inválido.'),
-  height: z.coerce.number().min(100, 'Altura inválida (em cm).'),
-  sleepHours: z.coerce.number().min(2).max(15),
-  consentTermsSigned: z.literal(true, {
-    errorMap: () => ({ message: 'Você precisa aceitar os termos.' }),
-  }),
+  weight: z.any().transform(Number).refine(val => val >= 30, 'Peso inválido.'),
+  height: z.any().transform(Number).refine(val => val >= 100, 'Altura inválida (em cm).'),
+  sleepHours: z.any().transform(Number).refine(val => val >= 2 && val <= 15, 'Entre 2 e 15 horas.'),
+  consentTermsSigned: z.boolean().refine(val => val === true, { message: 'Você precisa aceitar os termos.' }),
 });
 
 type AnamnesisFormValues = z.infer<typeof anamnesisSchema>;

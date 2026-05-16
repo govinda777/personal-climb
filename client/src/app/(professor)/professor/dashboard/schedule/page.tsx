@@ -11,7 +11,7 @@ const scheduleSchema = z.object({
   date: z.string().min(1, 'A data é obrigatória.'),
   startTime: z.string().min(1, 'Hora de início é obrigatória.'),
   endTime: z.string().min(1, 'Hora de término é obrigatória.'),
-  maxCapacity: z.coerce.number().int().min(1, 'A capacidade deve ser pelo menos 1.'),
+  maxCapacity: z.any().transform(Number).refine(val => Number.isInteger(val) && val >= 1, 'A capacidade deve ser pelo menos 1.'),
   location: z.string().optional(),
 });
 

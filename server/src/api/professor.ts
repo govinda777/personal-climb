@@ -108,7 +108,7 @@ app.post('/schedule', zValidator('json', scheduleSchema), async (c) => {
     if (personalsList.length === 0) {
       return c.json({ error: 'Personal not found' }, 404)
     }
-    const personalId = personalsList[0].id
+    const personalId = personalsList[0]!.id
 
     const [newSlot] = await db.insert(schema.scheduleSlots).values({
       personalId,
@@ -133,7 +133,7 @@ app.get('/schedule', async (c) => {
     if (personalsList.length === 0) {
       return c.json({ slots: [] })
     }
-    const personalId = personalsList[0].id
+    const personalId = personalsList[0]!.id
 
     const slots = await db.select().from(schema.scheduleSlots).where(eq(schema.scheduleSlots.personalId, personalId))
 
@@ -156,7 +156,7 @@ app.get('/plans', async (c) => {
   try {
     const personalsList = await db.select().from(schema.personals).where(eq(schema.personals.userId, user.id)).limit(1)
     if (personalsList.length === 0) return c.json({ error: 'Personal not found' }, 404)
-    const personalId = personalsList[0].id
+    const personalId = personalsList[0]!.id
 
     // Get all plans for this trainer
     const plans = await db.select().from(schema.trainingPlans).where(eq(schema.trainingPlans.personalId, personalId))
@@ -180,8 +180,8 @@ app.get('/plans', async (c) => {
 })
 
 const planApprovalSchema = z.object({
-  status,
-      ...(aiRationale !== undefined && { aiRationale }): z.enum(['approved', 'draft', 'rejected']) // Simplify for now
+  status: z.enum(['approved', 'draft', 'rejected']),
+  aiRationale: z.string().optional()
 })
 
 app.put('/plans/:id/approve', zValidator('json', planApprovalSchema), async (c) => {
@@ -211,7 +211,7 @@ app.get('/dashboard', async (c) => {
     const personalsList = await db.select().from(schema.personals).where(eq(schema.personals.userId, user.id)).limit(1)
     if (personalsList.length === 0) return c.json({ error: 'Personal not found' }, 404)
 
-    const personal = personalsList[0]
+    const personal = personalsList[0]!
 
     // Get athletes
     const athletesList = await db.select().from(schema.athletes).where(eq(schema.athletes.personalId, personal.id))
@@ -220,30 +220,28 @@ app.get('/dashboard', async (c) => {
     const pendingPlansList = await db.select().from(schema.trainingPlans).where(
       eq(schema.trainingPlans.personalId, personal.id)
     )
-    const pendingPlansCount = pendingPlansList.filter(p => p.status,
-      ...(aiRationale !== undefined && { aiRationale }) === 'draft').length
+    const pendingPlansCount = pendingPlansList.filter(p => p!.status === 'draft').length
 
     // Simulated/Basic stats
     const stats = {
       totalAthletes: athletesList.length,
       pendingApproval: pendingPlansCount,
-      inactiveStudents: athletesList.filter(a => a.isActive === 0).length,
+      inactiveStudents: athletesList.filter(a => a!.isActive === 0).length,
       evolutionRate: '85%' // Placeholder for complex gamification calculation
     }
 
     const students = athletesList.map(a => ({
       id: a.id,
-      name: a.userId.substring(0, 8), // Placeholder DID trunc until we join profile names
+      name: a!.userId!.substring(0, 8), // Placeholder DID trunc until we join profile names
       lastTrain: 'Há 2 dias',
-      grade: a.vGradeLevel || 'V0',
-      status,
-      ...(aiRationale !== undefined && { aiRationale }): pendingPlansList.some(p => p.athleteId === a.id && p.status === 'draft') ? 'pending' : 'active',
+      grade: a!.vGradeLevel || 'V0',
+      status: pendingPlansList.some(p => p!.athleteId === a!.id && p.status === 'draft') ? 'pending' : 'active',
       alert: a.isActive === 0
     }))
 
     return c.json({
       personal: {
-        brandName: personal.brandName
+        brandName: personal!.brandName
       },
       stats,
       students
