@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test';
 test.describe('Professor Flow E2E', () => {
   test('Should render dashboard and load mocked stats', async ({ page }) => {
     // Mock the backend API response
-    await page.route('**/api/professor/dashboard', async (route) => {
+    await page.route('**/api/professor/dashboard.html', async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -26,7 +26,7 @@ test.describe('Professor Flow E2E', () => {
     // injecting tokens or setting localStorage/cookies that privy relies on,
     // or by mocking the network requests privy makes.
     // Assuming unauthenticated state shows the login prompt:
-    await page.goto('/professor/dashboard');
+    await page.goto('/professor/dashboard.html');
     await expect(page.locator('text=Faça login para acessar o painel')).toBeVisible();
 
     // For a fully authenticated e2e test, we would need to mock privy tokens,
