@@ -1,13 +1,14 @@
 import { Hono } from 'hono'
 import { logger } from 'hono/logger'
+import crypto from 'node:crypto'
 import { privyAuth } from './middleware/auth'
 import { GamificationService } from './services/gamification'
 import { drizzle } from 'drizzle-orm/node-postgres'
 import { Pool } from 'pg'
 import * as schema from './db/schema'
 import { GAMIFICATION_CONFIG } from './lib/gamification'
-import { createWalletClient, http, privateKeyToAccount, hashTypedData } from 'viem'
-import { privateKeyToAddress } from 'viem/accounts'
+import { createWalletClient, http, hashTypedData } from 'viem'
+import { privateKeyToAddress, privateKeyToAccount } from 'viem/accounts'
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL
@@ -117,4 +118,14 @@ app.get('/verify-xp/:address', async (c) => {
   }
 })
 
+import { serve } from '@hono/node-server'
+
 export default app
+
+const port = 3001
+console.log(`Server is running on port ${port}`)
+
+serve({
+  fetch: app.fetch,
+  port
+})
