@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, integer, jsonb, numeric, boolean } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, integer, jsonb, numeric, boolean, uniqueIndex } from "drizzle-orm/pg-core";
 
 export const profiles = pgTable("profiles", {
   id: text("id").primaryKey(), // Privy DID
@@ -84,7 +84,9 @@ export const checkins = pgTable("checkins", {
   status: text("status").default("scheduled").notNull(),
   confirmedAt: timestamp("confirmed_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (t) => [
+  uniqueIndex("unq_checkin_athlete_slot").on(t.athleteId, t.slotId)
+]);
 
 export const trainingPlans = pgTable("training_plans", {
   id: uuid("id").primaryKey().defaultRandom(),
