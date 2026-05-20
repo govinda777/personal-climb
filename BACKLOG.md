@@ -1,92 +1,104 @@
 # Backlog - Personal Climb
 
-Este documento centraliza o mapeamento dos Casos de Uso (UCs) da plataforma Personal Climb, organizados por épicos e com o detalhamento necessário para a execução técnica.
+Este documento centraliza o mapeamento dos Casos de Uso (UCs) da plataforma Personal Climb, organizados por épicos e detalhados para execução técnica.
 
-A visão atual de produto foca em estabilizar o motor de onboarding dinâmico e o core hotsite white-label da aplicação, visando suportar a expansão das mecânicas avançadas e a retroalimentação de IA baseada no modelo LLM escolhido (Gemini).
+A visão do produto foca na estabilização do motor de onboarding dinâmico, hotsite white-label e na expansão para IA e mecânicas Web3 avançadas.
 
 ---
 
-## 🏗️ Épico 1: Core Engine & Onboarding Base (Concluídos / Em Curso)
+## 🏗️ Infra & Core Engine
 
-Esta seção mapeia os fluxos fundamentais de fundação e negócios principais da plataforma.
+Foco nos fluxos fundamentais de plataforma, infraestrutura de banco de dados e roteamento principal.
 
 - [x] **UC01: Seleção de Perfil (Onboarding)**
-  - Redirecionamento inteligente na landing page entre Aluno (Hotsite White-label) e Personal (Produto Business).
-  - *Técnico:* Modal exibido na página inicial e estado salvo em `sessionStorage` (`hasSeenUserTypeModal`).
+  - Redirecionamento na landing page entre Aluno e Personal.
+  - *Técnico:* Modal via UI; estado de sessão em `sessionStorage` (`hasSeenUserTypeModal`).
 - [x] **UC02: Autenticação Universal (Privy)**
-  - Login exclusivo via email (OTP/Magic Link passwordless), com provisionamento invisível de carteira Web3 (Embedded Wallet) gerada automaticamente para o usuário.
-  - *Técnico:* Integração `@privy-io/react-auth` no front com flag `createOnLogin` habilitada para embedded wallets. O identificador principal é o DID do Privy no banco (SQL/Postgres).
+  - Login passwordless via e-mail e provisionamento transparente de Embedded Wallet.
+  - *Técnico:* Uso de `@privy-io/react-auth` (`createOnLogin: true`). DID persistido como chave primária em PostgreSQL (tipo texto).
 - [x] **UC03: Assinatura e Pagamentos (Stripe Checkout)**
-  - Contratação de pacotes de treinamento pelo atleta no Hotsite do treinador.
+  - Contratação de pacotes pelo atleta via Hotsite.
+  - *Técnico:* Integração Stripe Checkout (modo subscription).
 - [x] **UC04: Gestão de Assinaturas (Billing Tracker)**
-  - Cobrança baseada no uso para o Personal (usage-based billing). Controlado ativamente pela flag `athletes.isActive`.
-  - *Técnico:* Acompanhamento em background via Stripe Webhooks e sincronização com a tabela `personals` (`stripeSubscriptionId`, `subscriptionStatus`).
+  - Cobrança baseada no uso para o Personal (usage-based billing).
+  - *Técnico:* Webhooks Stripe para update assíncrono; controle de acesso via flag `athletes.isActive`.
+
+---
+
+## 🖥️ Frontend & UX
+
+Tarefas focadas na experiência, parametrização de Hotsite, CRM e UI/UX geral.
+
 - [x] **UC05: Hotsite White-label Dinâmico**
-  - Carregamento customizado de cores, nome e treinos baseado na rota.
-  - *Técnico:* Roteamento dinâmico `/personal/[slug]` em Next.js com geração estática (`generateStaticParams`). Informações dinâmicas mescladas do banco de dados (SQL) e Sanity CMS.
-
----
-
-## 🖥️ Épico 2: Dashboard do Personal & Configurações
-
-Tarefas focadas na experiência, parametrização e gestão do treinador.
-
+  - Hotsite do treinador com rota dedicada.
+  - *Técnico:* Next.js static export (`output: 'export'`) em `/personal/[slug]` via `generateStaticParams`.
 - [ ] **UC06: Configuração de Marca e Perfil (CMS/DB Integration)**
-  - **Descrição:** Interface no dashboard do treinador para definir/editar nome, cores primárias/secundárias, biografia e pacotes de treinamento.
-  - **Critérios de Aceite:** Alterações salvas com sucesso em banco de dados e refletidas imediatamente no hotsite com integração dual de Sanity CMS e Drizzle (SQL).
-- [ ] **UC08: Gestão de Agenda e Horários**
-  - **Descrição:** Criação e gerenciamento de `schedule_slots` de horário para treinos presenciais e online, incluindo a definição de capacidade máxima de vagas por horário.
-  - **Critérios de Aceite:** Validação eficiente para evitar overbooking, delegando para constraints e isolamento padrão do PostgreSQL (sem necessidade imediata de filas assíncronas custosas, dado o volume inicialmente projetado).
+  - **Descrição:** Dashboard do treinador para gestão de nome, cores, biografia e pacotes de venda.
+  - **Critérios de Aceite:** Integração dual Sanity CMS (design/content) e PostgreSQL (Drizzle) para persistência; reflexo automático no hotsite estático.
 - [ ] **UC09: CRM e Dashboard de Atletas**
-  - **Descrição:** Painel analítico onde o treinador visualiza uma lista geral de seus alunos ativos (`athletes.isActive = true`), os respectivos níveis técnicos, status de pagamentos, taxas de adesão aos treinos e métricas de evolução.
-- [ ] **UC15: Base de Conhecimento do Treinador (Sanity CMS)**
-  - **Descrição:** O treinador poderá pré-cadastrar exercícios e blocos de treino no Sanity CMS. Esta base servirá como biblioteca e insumo estrito para as decisões do Agente de IA na montagem das sessões.
-  - **Critérios de Aceite:** Criação e integração dos schemas (e.g., `exercise.ts`, `trainingBlock.ts`) no Sanity Studio, com consultas otimizadas via GROQ disponibilizadas para o backend (Hono).
+  - **Descrição:** Visão unificada de alunos ativos (`athletes.isActive = true`), níveis, inadimplência e evolução.
+  - **Critérios de Aceite:** Otimização de queries no PostgreSQL utilizando índices nas tabelas relacionais; carregamento lazy de métricas não críticas.
+- [ ] **UC11: Onboarding Clínico (Anamnese e Avaliação Física)**
+  - **Descrição:** Formulário transacional para captação do histórico clínico do aluno, lesões e medidas base.
+  - **Critérios de Aceite:** Inserção relacional e tipada (Zod) de formulários grandes na tabela `anamnesis`.
 
 ---
 
-## 🤖 Épico 3: Agente de Inteligência Artificial (Gemini) & Prescrição
+## 🤖 Agente de Inteligência Artificial (Gemini)
 
-Desenvolvimento da inteligência de geração e controle do treinamento físico, evoluída para o paradigma de Agentes autônomos.
+Módulo de prescrição de treinos utilizando LLM.
 
 - [ ] **UC07: Definição do Protocolo de Treino (Setup da IA)**
-  - **Descrição:** Tela para configuração do "prompt customizado" do treinador. Envolve definir as métricas preferidas para avaliação, regras de ouro do treinador e limitações padrões de equipamento.
-  - **Critérios de Aceite:** O payload de configuração deve ser versionado no banco. Estruturar inputs flexíveis que alimentem o prompt de sistema do Google Gemini de forma determinística.
+  - **Descrição:** Setup de "regras de ouro" (prompt de sistema personalizado do treinador).
+  - **Critérios de Aceite:** Armazenamento do payload versionado; constraints e fallback configuráveis.
 - [ ] **UC10: Revisão e Aprovação de Treinos (Human-in-the-loop IA)**
-  - **Descrição:** O Agente atuará de forma ativa: ele vai ler o contexto (dados e anamnese do atleta + conversa/protocolo com o treinador), cruzar com a base de exercícios (Sanity), gerar o treino dinamicamente, *pré-cadastrá-lo* no CMS/DB, e solicitar a aprovação. O treinador recebe sugestões estruturadas e pode aprovar ou editar manualmente.
-  - **Critérios de Aceite:** Implementar tool calling no LLM (Gemini) para interagir com o Sanity/Drizzle. Se a API do Gemini falhar (timeout ou erro de output), exibir feedback visual claro ao usuário e recuar para a geração de "treino template estático", impedindo o bloqueio da esteira do treinador.
+  - **Descrição:** O agente de IA cruza anamnese com o Sanity CMS, sugere o treino e exige a aprovação do personal.
+  - **Critérios de Aceite:** Utilizar *tool calling* do modelo Gemini para persistir drafts de treino. Implementar UI para fallback em caso de rejeição de output ou indisponibilidade da API do LLM.
+- [ ] **UC15: Base de Conhecimento do Treinador (Sanity CMS)**
+  - **Descrição:** Biblioteca de exercícios e templates injetados na memória do Agente de IA.
+  - **Critérios de Aceite:** Schemas no Sanity (`exercise.ts`) expostos via queries GROQ eficientes para o backend (Hono).
 
 ---
 
-## 🧗 Épico 4: Jornada do Atleta & UX
+## 📅 Agenda & Check-in
 
-Experiência do usuário final no aplicativo e check-in físico.
-
-- [ ] **UC11: Onboarding Clínico (Anamnese e Avaliação Física)**
-  - **Descrição:** Primeiro passo pós-contratação. Fluxo para o atleta preencher o formulário de anamnese, detalhando histórico de lesões, características físicas e seu nível base atual.
-  - **Critérios de Aceite:** Inserção em massa controlada (`anamnesis`, `physical_stats`) e flags para lesões ativadas no input da IA.
+- [ ] **UC08: Gestão de Agenda e Horários**
+  - **Descrição:** Gerenciamento de `schedule_slots` de capacidade definida pelo treinador.
+  - **Critérios de Aceite:** Prevenção de overbooking delegada a constraints de banco (`UNIQUE`, `CHECK`) e isolation levels do PG (`serializable`).
 - [ ] **UC12: Agendamento e Check-in de Treinos**
-  - **Descrição:** Visualização em calendário da disponibilidade do Personal e marcação do check-in pelo aluno.
-  - **Critérios de Aceite:** Validação de UUID de agendamento usando Zod via middleware do Hono no backend e prevenção em real-time contra reservas duplicadas.
-- [ ] **UC13: Execução do Treino e Feedback Subjetivo (Log de RPE)**
-  - **Descrição:** Visualização diária do treino e entrada obrigatória da Percepção Subjetiva de Esforço (RPE) no fim da sessão para o `workout_log`.
+  - **Descrição:** Calendário atleta-treinador; reserva de horários físicos/online.
+  - **Critérios de Aceite:** Validação de payload de entrada via Hono e middleware Zod (checagem estrita de UUIDs do atleta e slot).
+- [ ] **UC13: Execução do Treino e Log de RPE**
+  - **Descrição:** Entrada diária da Percepção Subjetiva de Esforço (RPE) no fim da sessão.
+  - **Critérios de Aceite:** Registro no `workout_log` interligado ao cálculo do Agente de IA.
 
 ---
 
-## ⛓️ Épico 5: Web3, Gamificação & Econômia
+## ⛓️ Web3 & Gamificação
 
 - [ ] **UC14: Gamificação e Progressão de Nível**
-  - **Descrição:** Concluir treinos gera XP, gerido via sistema de rate limit de cooldowns.
-  - **Critérios de Aceite:** A infraestrutura de meta-transaction/patrocínio do Privy garantirá as gas fees. O atleta não necessita fundos nativos para assinar e resgatar tokens via EIP-712 com o smart contract `XpAttestation`.
+  - **Descrição:** Concluir treinos gera XP via sistema de cooldown limit (on/off-chain).
+  - **Critérios de Aceite:** Geração e assinatura de payloads EIP-712 com Viem; validação via smart contract `XpAttestation`. Taxas de rede subsidiadas via Privy Paymaster (Meta-transactions).
+- [ ] **UC17: Web3 Streaks (Nova Adição)**
+  - **Descrição:** Mecânica de retenção baseada em streaks de treinos consecutivos com recompensa on-chain adicional.
+  - **Critérios de Aceite:** Oráculo on-chain ou validação em batch no backend Hono para aprimorar recompensas em XP ou emissões de NFTs de conquista (sem atrito de wallet).
 
 ---
 
-## 🚨 Pontos Cegos & Edge Cases (Segurança, Resiliência & Monitoramento)
+## 📈 Monitoramento & Analytics
 
-Tarefas contínuas para mitigar riscos técnicos e aumentar a resiliência arquitetural.
+- [ ] **UC16: Relatórios Financeiros (Nova Adição)**
+  - **Descrição:** Dashboard analítico avançado de faturamento e churn para o treinador.
+  - **Critérios de Aceite:** Como o core via Hono roda no Vercel Edge Runtime (incompatível com cargas pesadas de Node/PDF), delegar a geração de relatórios massivos a lambdas Serverless padrão (Node.js) ou workers assíncronos.
 
-- [ ] **Resiliência de IA (Degradação Graciosa):** Garantir que timeouts, fallbacks da API do Gemini e validações via Zod do output não crashem o app. Se o Gemini falhar, servir modelos base pré-aprovados ou sinalizar clareza de indisponibilidade da engine ao treinador.
-- [ ] **Data Race e Overbooking (Checkins):** Validar constraints (`UNIQUE`, `CHECK`) no banco de dados e isolation levels do PostgreSQL para `schedule_slots`, bloqueando alocações simultâneas inválidas no backend (Hono).
-- [ ] **Segurança no Export Estático do Next.js:** Auditoria constante nas chaves públicas (`NEXT_PUBLIC_*`). Assegurar que os artefatos em `client/out` não exponham segredos inadvertidos em bundlers, em alinhamento com a limitação de variáveis de ambiente do GitHub Actions.
-- [ ] **Manejo Abusivo de XP (Farming):** Validação rígida e testada via `bun:test` sobre a mecânica de cooldown de recompensas em `lib/gamification.ts`, impossibilitando exploração rápida de checkins fake por endpoints maliciosos.
-- [ ] **Monitoramento de Gas Fees (Web3):** Criação de um dashboard ou alertas (e.g. Discord webhook) para monitorar o consumo do Paymaster do Privy para evitar drenagem de fundos no patrocínio das taxas de rede do `XpAttestation`.
+---
+
+## 🔒 Segurança & Resiliência (Pontos Cegos & Edge Cases)
+
+Tarefas focadas em segurança proativa e arquitetura defensiva.
+
+- [ ] **Resiliência da Engine de IA:** Se a API do Gemini falhar (rate limit, timeout) ou retornar payload corrompido (falha na Zod schema), o backend não deve quebrar a UI. Requer UI de fallback ("Modo Manual") e logging crítico no Sentry.
+- [ ] **Isolamento de Transações (Checkins):** Validar a configuração de Drizzle/PG para impedir race conditions no agendamento e gasto duplo de gamificação sob concorrência.
+- [ ] **Prevenção de Abuso no Farming de XP:** Implementar rate limiter e validações cronológicas (cooldown via `setSystemTime` mocks nos testes do Bun) para evitar scripts maliciosos injetando EIP-712 repetidamente.
+- [ ] **Gestão de Segredos no Static Export:** O build do Next.js via GitHub Actions necessita injeção correta das vars (`NEXT_PUBLIC_`) sem vazar credenciais sensíveis no bundle `client/out`.
+- [ ] **Monitoramento Financeiro Web3:** Alerting contínuo do consumo de Paymaster (Privy); travas de segurança caso as taxas subam vertiginosamente.
