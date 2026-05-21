@@ -32,5 +32,6 @@ test.describe('Professor Flow E2E', () => {
     // For a fully authenticated e2e test, we would need to mock privy tokens,
     // which usually involves setting specific localStorage values or intercepting Privy's iframe.
     // For this demonstration, we verify the route is accessible and protected.
+
   });
 });

@@ -1,5 +1,5 @@
 {
-  "id": "0e7511af-e160-4755-83e8-7b2e6be7027c",
+  "id": "596c6597-8399-4f38-bf51-bb00ff55cfbf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -230,7 +230,29 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "unq_checkin_athlete_slot": {
+          "name": "unq_checkin_athlete_slot",
+          "columns": [
+            {
+              "expression": "athlete_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "slot_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "checkins_athlete_id_athletes_id_fk": {
           "name": "checkins_athlete_id_athletes_id_fk",

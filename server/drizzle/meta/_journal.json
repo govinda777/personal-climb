@@ -1,12 +1,14 @@
 {
   "version": "7",
-  "dialect": "postgresql",
+  "dialects": {
+    "postgresql": 0
+  },
   "entries": [
     {
       "idx": 0,
       "version": "7",
-      "when": 1778957841893,
-      "tag": "0000_unknown_slipstream",
+      "when": 1779322915007,
+      "tag": "0000_naive_james_howlett",
       "breakpoints": true
     }
   ]
