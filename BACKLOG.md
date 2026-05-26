@@ -6,9 +6,8 @@
 
 ---
 
-## 🏗️ Épico 1: Infraestrutura & Core Engine
-
-_Fluxos fundacionais de negócio e identidade já estabelecidos ou em estabilização._
+## 🏗️ Infra & Core Engine
+*Fluxos fundacionais de negócio e identidade já estabelecidos ou em estabilização.*
 
 - [x] **UC01: Seleção de Perfil (Onboarding)**
   - _Técnico:_ Redirecionamento dinâmico inteligente (Aluno vs Personal). Estado efêmero persistido via `sessionStorage` (`hasSeenUserTypeModal`).
@@ -19,65 +18,65 @@ _Fluxos fundacionais de negócio e identidade já estabelecidos ou em estabiliza
 - [x] **UC04: Gestão de Assinaturas (Billing Tracker)**
   - _Técnico:_ Usage-based billing sincronizado em background via Stripe Webhooks. Status reflete nas tabelas `personals` e `athletes` (controle de acesso).
 
-## 🖥️ Épico 2: Frontend, UX & Hotsite White-label
-
-_Gestão e parametrização das áreas do Treinador (Dashboard) e do Aluno (Hotsite)._
+## 🖥️ Frontend & UX (Hotsite & Dashboard)
+*Gestão e parametrização das áreas do Treinador (Dashboard) e do Aluno (Hotsite).*
 
 - [x] **UC05: Hotsite White-label Dinâmico (Core Engine)**
   - _Técnico:_ Roteamento dinâmico `/personal/[slug]` em Next.js (SSG via `generateStaticParams`). Mesclagem de configurações (Drizzle ORM + Sanity CMS).
 - [ ] **UC06: Setup de Marca e Perfil (CMS/DB Integration)**
-  - **Critério de Aceite:** Interface no Dashboard do Personal para atualizar cores, bio e pacotes. Os dados devem atualizar simultaneamente no Postgres e Sanity, com reflexo no Hotsite (revalidação de cache ou client-side fetching).
+  - **Critério de Aceite:** Interface no Dashboard do Personal para atualizar cores, bio e pacotes. Os dados devem atualizar nos respectivos bancos de origem (ex: Postgres para pacotes, CMS Sanity para bio/cores). O Hotsite deve buscar os dados corretamente de cada fonte, assumindo que eles são entidades distintas na arquitetura. Requer cobertura E2E com Playwright.
 - [ ] **UC08: Motor de Agenda e Capacidade (Schedule Slots)**
-  - **Critério de Aceite:** CRUD de `schedule_slots` para horários presenciais/online com vagas limitadas. _Gap Técnico:_ Garantir bloqueios contra overbooking delegando para as constraints transacionais e isolation level `serializable` do Postgres, sem necessidade de filas.
+  - **Critério de Aceite:** CRUD de `schedule_slots` para horários presenciais/online com vagas limitadas. *Gap Técnico:* Garantir bloqueios contra overbooking delegando para as constraints transacionais e isolation level `serializable` do Postgres, sem necessidade de filas. Requer testes no `server` com `bun:test`.
 - [ ] **UC09: CRM do Treinador (Gestão de Atletas)**
-  - **Critério de Aceite:** Tabela analítica consolidando alunos ativos (`isActive = true`), status de pagamento Stripe e sumário de progresso (XP/Nível).
+  - **Critério de Aceite:** Tabela analítica consolidando alunos ativos (`isActive = true`), status de pagamento Stripe e sumário de progresso (XP/Nível). Requer cobertura E2E no `client` com Playwright.
 - [ ] **UC11: Onboarding Clínico do Atleta (Anamnese)**
-  - **Critério de Aceite:** Formulário pós-checkout. Os dados devem ser armazenados de forma estruturada (tabela `anamnesis` e `physical_stats`) e os identificadores de lesão/limitações precisam ser expostos como contexto base para o Agente de IA.
+  - **Critério de Aceite:** Formulário pós-checkout validado via Zod. Os dados estruturados (`anamnesis`, `physical_stats`) atuarão como contexto base para o Agente de IA. Requer testes E2E para submissão do formulário.
 - [ ] **UC12: Agendamento e Check-in de Treinos**
-  - **Critério de Aceite:** Fluxo crítico. A API `/checkin` (Edge via Hono) deve aplicar validação rigorosa de UUIDs (Zod) e prevenir _data races_ na marcação concorrente de slots de horário.
+  - **Critério de Aceite:** Fluxo crítico. A API `/checkin` (Edge via Hono) deve aplicar validação rigorosa de UUIDs (Zod) e prevenir _data races_ na marcação concorrente de slots de horário. Requer testes unitários intensivos via `bun:test` usando `mock.module` para simular concorrência e erros de restrição (duplicação de chaves).
 - [ ] **UC13: Feedback Subjetivo Pós-Treino (Log RPE)**
-  - **Critério de Aceite:** Input diário obrigatório de Percepção Subjetiva de Esforço no `workout_log`. Essa tabela será um vetor de retroalimentação para as futuras iterações da IA.
+  - **Critério de Aceite:** Input diário de Percepção Subjetiva de Esforço persistido no `workout_log` que irá retroalimentar heurísticas da IA.
 
-## 🤖 Épico 3: IA Copilot & Base de Conhecimento
-
-_O núcleo inteligente: O treinador atua como piloto de alto nível, enquanto a IA faz o trabalho pesado de montagem tática baseada em parâmetros clínicos e acervo._
+## 🤖 IA Copilot & Base de Conhecimento
+*O núcleo inteligente: O treinador atua como piloto de alto nível, e a IA monta os treinos baseada em parâmetros.*
 
 - [ ] **UC15: Base de Conhecimento do Treinador (Sanity CMS)**
-  - **Critério de Aceite:** Cadastros estruturados (schemas `exercise.ts`, etc.) de exercícios e heurísticas próprias do treinador no Sanity, servindo de biblioteca restrita.
+  - **Critério de Aceite:** Estruturação de schemas (ex: `exercise.ts`) no Sanity para criar a biblioteca de referência da IA.
 - [ ] **UC07: Definição do Protocolo Base de IA**
-  - **Critério de Aceite:** Interface onde o treinador define regras de ouro, métricas e limitações de maquinário. Esse payload (armazenado via Drizzle) constrói o _System Prompt_ determinístico do LLM.
+  - **Critério de Aceite:** Persistir (via Drizzle) as regras de ouro, métricas e maquinário base do treinador. Esse artefato comporá o *System Prompt* determinístico do LLM.
 - [ ] **UC10: Geração de Treino Assistida (Copilot Human-in-the-Loop)**
-  - **Critério de Aceite:** A partir de um pedido descritivo (prompt) do treinador sobre o treino desejado, o Agente de IA (Gemini) analisa a anamnese do atleta (UC11) + regras (UC07) + acervo (UC15).
-  - _Regra de Negócio:_ O Agente deve priorizar exercícios já cadastrados no Sanity do treinador, mas tem **autonomia para sugerir novos exercícios** para cumprir o objetivo do prompt.
-  - _Fluxo:_ O treino é gerado, o treinador revisa (treino a treino), faz correções e aprova, momento em que o treino é persistido definitivamente no banco e disponibilizado para o atleta.
+  - **Critério de Aceite:** Agente (Gemini) gera treinos via Tool Calling analisando a anamnese (UC11), as regras do treinador (UC07) e o acervo (UC15). Deve sugerir exercícios do Sanity mas ter autonomia para novas sugestões. É obrigatório o fluxo de *Human-in-the-loop* (treinador aprova antes de expor ao aluno). Requer testes extensivos de fallback visual da interface caso a API falhe (via Playwright) e testes no Hono verificando validação do output via Zod.
 
-## 🎮 Épico 4: Gamificação & Progressão (Web3-Hybrid)
-
-_Engajamento via XP. A arquitetura foi simplificada para priorizar performance off-chain primeiro, sem dependência rígida de contratos na blockchain para toda transação._
+## 🎮 Gamificação & Progressão (Web3-Hybrid)
+*Engajamento via XP gerenciado off-chain com validação criptográfica.*
 
 - [ ] **UC14: Motor de XP Off-Chain**
-  - **Critério de Aceite:** Conclusões de treinos geram pontos de XP. Os saldos e eventos de gamificação (níveis) serão persistidos e gerenciados exclusivamente no banco de dados relacional (Drizzle/Postgres). A mecânica deve implementar _rate limits_ rigorosos (cooldowns de checkin) para prevenir abusos (farming).
+  - **Critério de Aceite:** Consolidar saldo/nível em relacional (Postgres). Deve usar limites rígidos (caps diários/semanais de XP) controlados centralmente no `lib/gamification.ts`, rodando obrigatoriamente do lado do servidor (validando fusos horários seguros) para impedir manipulação client-side e farming. Requer `bun:test` focado nos limites de taxa de cooldown.
 - [ ] **UC17: Endpoints de Verificação de Autenticidade (Third-Party Check)**
-  - **Critério de Aceite:** Em vez de emitir prêmios on-chain nativamente para cada marca, implementaremos APIs de leitura (e geração de provas usando EIP-712) para que órgãos/sistemas/carteiras externas consigam validar e atestar a veracidade do XP e dos streaks de um atleta fora da plataforma.
+  - **Critério de Aceite:** Desenvolver API de emissão/verificação de Provas usando assinaturas EIP-712 com o contrato `XpAttestation`, permitindo a terceiros auditar streaks sem a necessidade de gravar cada check-in na blockchain.
 
-_(Nota: UC18 - Wearables foi despriorizado e retirado do escopo desta release para garantir foco na estabilização do Copilot IA)._
-
-## 📈 Épico 5: Monitoramento & Analytics Financeiro
-
-_Tudo que for de billing pesado é terceirizado._
+## 📈 Monitoramento & Analytics
+*Tarefas financeiras delegadas.*
 
 - [ ] **UC16: Relatórios e Faturamento via Stripe Dashboard**
-  - **Critério de Aceite:** Integração de sessão segura com o portal nativo da Stripe (`stripe.billingPortal.sessions.create`). O app atua apenas como pass-through, delegando a UI visual de faturamento, MRR e churn estritamente à Stripe.
+  - **Critério de Aceite:** Criar proxy seguro para gerar sessões no Portal do Cliente da Stripe, que cuidará de MRR, Churn e faturas, evitando processamento analítico no Vercel Edge.
 
 ---
 
-## 🔒 Pontos Cegos & Edge Cases (Resiliência & Segurança)
+## 🔒 Pontos Cegos & Edge Cases
+*Tarefas de infraestrutura essenciais para resiliência arquitetural e segurança preventiva.*
 
-_Tarefas contínuas de engenharia para mitigar riscos técnicos e fortalecer a arquitetura._
-
-- [ ] **Tratamento de Falhas e Degradação Graciosa da IA:** A API do Gemini pode sofrer timeout ou rate limits (API indisponível). _Ação:_ Se o Agente falhar, a UI de aprovação de treinos não pode gerar erro fatal. É preciso garantir fallback visual, alertas descritivos ao treinador e validação estrita via esquema (Zod) das respostas (outputs em JSON) do LLM (Tool Calling).
-- [ ] **Race Conditions (Overbooking) no Agendamento:** _Ação:_ Impedir que concorrência (ex: double-clicks na UI, ou requests massivos) burlem o limite de vagas nos `schedule_slots`. Usar constraints robustas (ex: chaves compostas e `CHECK`), transações atômicas no Drizzle e nível de isolamento adequado.
-- [ ] **Prevenção contra XP Farming e Abusos:** _Ação:_ Isolar a lógica de gamificação em `lib/gamification.ts` e realizar validações extensivas através de testes unitários (`bun:test`). A regra de cooldown de prêmios/pontos deve rodar no backend com acesso ao banco e timestamp de servidor para impedir explorações via client-side scripts.
-- [ ] **Segurança de Segredos e Bundle no Next.js (SSG):** _Ação:_ Como a aplicação faz export estático (`output: 'export'`), as variáveis de ambiente sensíveis (ex: chaves do Stripe e chaves privadas do Hono) nunca devem começar com `NEXT_PUBLIC_` se não puderem ser publicamente expostas ao browser. Revisar os arquivos de Environment variables do GitHub Actions e o payload do Webpack.
-- [ ] **Idempotência e Falhas Silenciosas no Webhook da Stripe:** _Ação:_ As Edge Functions que escutam eventos do Stripe (`customer.subscription.updated`) devem tratar os payloads de maneira idempotente. Eventos duplicados não podem cobrar/bloquear em duplicidade e falhas precisam ser enviadas para ferramentas de log (Sentry/Vercel) para garantir que ninguém perca o acesso injustamente.
-- [ ] Implementar endpoint `/api/actions/billing-portal` integrado ao Stripe Customer Portal SDK para gerenciamento de assinaturas.
+- [ ] **Tratamento de Falhas e Degradação Graciosa da IA:**
+  - **Contexto:** Timouts ou rate limits do Gemini não podem paralisar o app.
+  - **Ação:** Implementar circuito de fallback visual (UI degraded) na aprovação de treinos e validação estrita (Zod parsing) de Tool Calling JSON emitidos pela IA.
+- [ ] **Validação Estrita de Carga de Slots (Overbooking):**
+  - **Contexto:** Prevenção contra data races.
+  - **Ação:** Usar nível de isolamento `serializable` em transações chave no banco e simular (via `mock.module` no `bun:test`) conflitos de concorrência massiva no agendamento e check-in.
+- [ ] **Segurança de XP / Abuso de Gamificação:**
+  - **Contexto:** Usuários maliciosos podem tentar fraudar timestamps via client para farmar XP (ex: mudando timezone no browser).
+  - **Ação:** Centralizar regras e caps diários/semanais em `lib/gamification.ts`, avaliando os tempos e cooldowns baseados *apenas* no relógio seguro do servidor.
+- [ ] **Segurança de Segredos e Válvulas de Escape em Export Estático:**
+  - **Contexto:** Proteção contra vazamento de chaves privadas em builds de client Next.js.
+  - **Ação:** Auditar flags `NEXT_PUBLIC_` e os arquivos de deploy de GitHub Actions, e assegurar que as dependências/secrets sensíveis do Hono (backend) fiquem blindados do bundle de `output: 'export'`.
+- [ ] **Idempotência de Webhooks de Pagamento:**
+  - **Contexto:** Prevenir cobranças duplicadas ou interrupções de acesso indevidas caso a Stripe reenvie payloads idênticos.
+  - **Ação:** Registrar processamentos e lidar de forma idempotente em eventos críticos como `customer.subscription.updated`.
