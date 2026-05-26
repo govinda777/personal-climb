@@ -1,14 +1,16 @@
-'use client';
+"use client";
 
-import { usePrivy } from '@privy-io/react-auth';
-import { useState, useEffect, useCallback } from 'react';
-import { GAMIFICATION_CONFIG } from '@/lib/gamification';
+import { usePrivy } from "@privy-io/react-auth";
+import { useState, useEffect, useCallback } from "react";
+import { GAMIFICATION_CONFIG } from "@/lib/gamification";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export const useGamification = () => {
   const { getAccessToken, authenticated } = usePrivy();
-  const [profile, setProfile] = useState<{ xp: number; level: number } | null>(null);
+  const [profile, setProfile] = useState<{ xp: number; level: number } | null>(
+    null,
+  );
   const [loading, setLoading] = useState(false);
 
   const fetchProfile = useCallback(async () => {
@@ -24,18 +26,18 @@ export const useGamification = () => {
       const data = await res.json();
       setProfile(data);
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error("Error fetching profile:", error);
     } finally {
       setLoading(false);
     }
   }, [authenticated, getAccessToken]);
 
-  const awardXP = async (action: 'onboarding' | 'workout-complete') => {
+  const awardXP = async (action: "onboarding" | "workout-complete") => {
     if (!authenticated) return;
     try {
       const token = await getAccessToken();
       const res = await fetch(`${API_URL}/actions/${action}`, {
-        method: 'POST',
+        method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -43,7 +45,9 @@ export const useGamification = () => {
       const data = await res.json();
       setProfile(data);
 
-      const configKey = action.toUpperCase().replace('-', '_') as keyof typeof GAMIFICATION_CONFIG.REWARDS;
+      const configKey = action
+        .toUpperCase()
+        .replace("-", "_") as keyof typeof GAMIFICATION_CONFIG.REWARDS;
       const message = GAMIFICATION_CONFIG.REWARDS[configKey]?.MESSAGE;
 
       return { ...data, message };

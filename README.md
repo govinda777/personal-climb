@@ -9,6 +9,7 @@ Este repositório contém a estrutura da plataforma **Personal Climb**, uma solu
 ### User Stories
 
 #### Jornada do Personal (White-label)
+
 1. **Configuração de Marca:** Como Personal, quero configurar meu Hotsite (nome, cores, bio, pacotes) via CMS para que eu tenha uma presença profissional online.
 2. **Protocolo de Treino:** Como Personal, quero definir minha metodologia de treino e critérios de avaliação para que a IA gere sugestões alinhadas com minha filosofia.
 3. **Gestão de Agenda:** Como Personal, quero disponibilizar meus horários para que meus alunos possam realizar o check-in e confirmar treinos presenciais ou remotos.
@@ -16,6 +17,7 @@ Este repositório contém a estrutura da plataforma **Personal Climb**, uma solu
 5. **Aprovação de Treinos:** Como Personal, quero revisar e aprovar os treinos sugeridos pela IA para meus atletas, garantindo segurança e personalização final.
 
 #### Jornada do Atleta
+
 1. **Contratação:** Como atleta, quero acessar o Hotsite do meu Personal, ver seus pacotes e realizar a assinatura.
 2. **Anamnese e Avaliação:** Como atleta, quero preencher meus dados e realizar testes físicos para que o Personal e a IA conheçam meu nível atual.
 3. **Check-in de Treino:** Como atleta, quero marcar os dias e horários que irei treinar para coordenar com meu Personal.
@@ -79,6 +81,7 @@ erDiagram
 **Objetivo:** Gerar ciclos de treinamento personalizados baseados na **anamnese do atleta** e no **protocolo específico** definido pelo Personal.
 
 **Instruções Críticas:**
+
 1. **Filtro de Segurança:** Se houver histórico de lesões, priorize exercícios de baixo impacto e reabilitação. Jamais sugira treinos de alta intensidade (ex: Campus Board) para atletas com menos de 2 anos de prática consistente.
 2. **Contexto de Equipamento:** Adapte o treino estritamente aos equipamentos disponíveis (MoonBoard, Hangboard, Muro Comercial, etc).
 3. **Metodologia do Personal:** Respeite as "Regras de Ouro" do treinador (ex: "Sempre focar em mobilidade de ombros antes de treinos de potência").
@@ -103,6 +106,7 @@ Este projeto utiliza uma arquitetura moderna e escalável, focada em performance
 4.  **UC05: White Label Dinâmico:** Carregamento de marca e treinos baseado no slug do personal.
 
 ### Componentes Técnicos
+
 1. **Frontend (`/client`):** Next.js 15 (App Router) + Tailwind CSS.
    - **Autenticação:** Privy.io.
    - **Hospedagem:** GitHub Pages (Exportação Estática).
@@ -113,8 +117,10 @@ Este projeto utiliza uma arquitetura moderna e escalável, focada em performance
 3. **CMS (`/studio`):** Sanity.io para gestão de conteúdo white-label.
 
 ### CI/CD (GitHub Actions)
+
 - `.github/workflows/deploy-frontend.yml`: Build e deploy automático para GitHub Pages.
 - `.github/workflows/deploy-backend.yml`: Deploy automático para Vercel.
 
 ---
-*Documentação gerada por Jules - Soluções Personal Climb.*
+
+_Documentação gerada por Jules - Soluções Personal Climb._

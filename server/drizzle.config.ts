@@ -5,6 +5,8 @@ export default defineConfig({
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DATABASE_URL || "postgres://localhost:5432/climbing_evolution",
+    url:
+      process.env.DATABASE_URL ||
+      "postgres://localhost:5432/climbing_evolution",
   },
 });

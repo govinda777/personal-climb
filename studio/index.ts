@@ -1,4 +1,4 @@
-import personalConfig from './personalConfig'
-import exercise from './exercise'
+import personalConfig from "./personalConfig";
+import exercise from "./exercise";
 
-export const schemaTypes = [personalConfig, exercise]
+export const schemaTypes = [personalConfig, exercise];

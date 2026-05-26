@@ -1,27 +1,32 @@
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 export async function fetchPersonalBySlug(slug: string) {
   const response = await fetch(`${API_URL}/api/personals/${slug}`, {
-    next: { revalidate: 60 } // Revalidate every minute
+    next: { revalidate: 60 }, // Revalidate every minute
   });
   if (!response.ok) {
-    throw new Error('Failed to fetch personal config');
+    throw new Error("Failed to fetch personal config");
   }
   return response.json();
 }
 
-export async function createCheckoutSession(packageId: string, personalId: string, token: string) {
+export async function createCheckoutSession(
+  packageId: string,
+  personalId: string,
+  token: string,
+) {
   const response = await fetch(`${API_URL}/checkout/create`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ packageId, personalId })
+    body: JSON.stringify({ packageId, personalId }),
   });
 
   if (!response.ok) {
-    throw new Error('Failed to create checkout session');
+    throw new Error("Failed to create checkout session");
   }
   return response.json();
 }
@@ -29,12 +34,12 @@ export async function createCheckoutSession(packageId: string, personalId: strin
 export async function fetchProfessorDashboard(token: string) {
   const response = await fetch(`${API_URL}/api/professor/dashboard`, {
     headers: {
-      'Authorization': `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok) {
-    throw new Error('Failed to fetch dashboard data');
+    throw new Error("Failed to fetch dashboard data");
   }
   return response.json();
 }

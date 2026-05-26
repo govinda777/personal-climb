@@ -28,5 +28,5 @@ export const GAMIFICATION_CONFIG = {
       { name: "totalXp", type: "uint256" },
       { name: "nonce", type: "bytes32" },
     ],
-  }
+  },
 };

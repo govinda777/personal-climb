@@ -1,8 +1,8 @@
 module.exports = {
   default: {
-    requireModule: ['ts-node/register'],
-    require: ['features/support/**/*.ts'],
-    paths: ['features/**/*.feature'],
+    requireModule: ["ts-node/register"],
+    require: ["features/support/**/*.ts"],
+    paths: ["features/**/*.feature"],
     publishQuiet: true,
-  }
+  },
 };

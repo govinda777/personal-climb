@@ -1,7 +1,13 @@
-import { BeforeAll, Before, After, AfterStep, setWorldConstructor } from '@cucumber/cucumber';
-import { chromium, Browser, Page } from '@playwright/test';
-import * as fs from 'fs';
-import * as path from 'path';
+import {
+  BeforeAll,
+  Before,
+  After,
+  AfterStep,
+  setWorldConstructor,
+} from "@cucumber/cucumber";
+import { chromium, Browser, Page } from "@playwright/test";
+import * as fs from "fs";
+import * as path from "path";
 
 // Define custom world to hold browser and page instances
 class CustomWorld {
@@ -11,7 +17,7 @@ class CustomWorld {
 
 setWorldConstructor(CustomWorld);
 
-const snapshotDir = path.join(process.cwd(), 'docs', 'last-commit-snapshots');
+const snapshotDir = path.join(process.cwd(), "docs", "last-commit-snapshots");
 
 BeforeAll(async function () {
   // Clear the snapshots directory before running tests
@@ -29,10 +35,10 @@ Before(async function () {
 
 AfterStep(async function ({ pickle, pickleStep, result }) {
   // Take a full page screenshot after every successful step
-  if (result.status === 'PASSED' && this.page) {
+  if (result.status === "PASSED" && this.page) {
     // Sanitize feature name and step index for filename
-    const featureName = pickle.name.replace(/[^a-z0-9]/gi, '-').toLowerCase();
-    
+    const featureName = pickle.name.replace(/[^a-z0-9]/gi, "-").toLowerCase();
+
     // Find the step index (Cucumber doesn't easily expose the raw index in this hook, so we estimate based on the step id)
     // Alternatively, we can use a counter per scenario.
     if (!this.stepIndex) {

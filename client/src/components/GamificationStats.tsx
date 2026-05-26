@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Zap, Trophy } from 'lucide-react';
+import { motion } from "framer-motion";
+import { Zap, Trophy } from "lucide-react";
 
 interface GamificationStatsProps {
   xp: number;
@@ -12,20 +12,27 @@ export function GamificationStats({ xp, level }: GamificationStatsProps) {
   // XP to next level: (level)^2 * 100
   const xpForNextLevel = Math.pow(level, 2) * 100;
   const xpForCurrentLevel = Math.pow(level - 1, 2) * 100;
-  const progress = ((xp - xpForCurrentLevel) / (xpForNextLevel - xpForCurrentLevel)) * 100;
+  const progress =
+    ((xp - xpForCurrentLevel) / (xpForNextLevel - xpForCurrentLevel)) * 100;
 
   return (
     <div className="bg-zinc-900 border border-white/5 p-6 rounded-2xl space-y-4">
       <div className="flex justify-between items-end">
         <div className="space-y-1">
-          <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">Current Level</span>
+          <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">
+            Current Level
+          </span>
           <div className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-yellow-500" />
-            <span className="text-3xl font-black italic italic">LVL {level}</span>
+            <span className="text-3xl font-black italic italic">
+              LVL {level}
+            </span>
           </div>
         </div>
         <div className="text-right">
-          <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">Total XP</span>
+          <span className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.3em]">
+            Total XP
+          </span>
           <div className="text-xl font-black italic">{xp}</div>
         </div>
       </div>

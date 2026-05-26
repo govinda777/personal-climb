@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, integer, jsonb, numeric, boolean, uniqueIndex } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  integer,
+  jsonb,
+  numeric,
+  boolean,
+  uniqueIndex,
+} from "drizzle-orm/pg-core";
 
 export const profiles = pgTable("profiles", {
   id: text("id").primaryKey(), // Privy DID
@@ -11,7 +21,9 @@ export const profiles = pgTable("profiles", {
 
 export const gamificationLogs = pgTable("gamification_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  profileId: text("profile_id").references(() => profiles.id).notNull(),
+  profileId: text("profile_id")
+    .references(() => profiles.id)
+    .notNull(),
   points: integer("points").notNull(),
   reason: text("reason").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -19,7 +31,9 @@ export const gamificationLogs = pgTable("gamification_logs", {
 
 export const personals = pgTable("personals", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id").references(() => profiles.id).notNull(),
+  userId: text("user_id")
+    .references(() => profiles.id)
+    .notNull(),
   slug: text("slug").unique().notNull(), // URL amigável para White Label
   brandName: text("brand_name").notNull(),
   primaryColor: text("primary_color").default("#000000"),
@@ -38,7 +52,9 @@ export const personals = pgTable("personals", {
 
 export const athletes = pgTable("athletes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: text("user_id").references(() => profiles.id).notNull(),
+  userId: text("user_id")
+    .references(() => profiles.id)
+    .notNull(),
   personalId: uuid("personal_id").references(() => personals.id),
   vGradeLevel: text("v_grade_level"),
   frenchGradeLevel: text("french_grade_level"),
@@ -50,7 +66,9 @@ export const athletes = pgTable("athletes", {
 
 export const anamnesis = pgTable("anamnesis", {
   id: uuid("id").primaryKey().defaultRandom(),
-  athleteId: uuid("athlete_id").references(() => athletes.id).notNull(),
+  athleteId: uuid("athlete_id")
+    .references(() => athletes.id)
+    .notNull(),
   medicalRestrictions: text("medical_restrictions"),
   goals: text("goals"),
   anthropometricData: jsonb("anthropometric_data"), // peso, altura, % gordura, etc.
@@ -62,7 +80,9 @@ export const anamnesis = pgTable("anamnesis", {
 
 export const trainingPackages = pgTable("training_packages", {
   id: uuid("id").primaryKey().defaultRandom(),
-  personalId: uuid("personal_id").references(() => personals.id).notNull(),
+  personalId: uuid("personal_id")
+    .references(() => personals.id)
+    .notNull(),
   name: text("name").notNull(),
   price: numeric("price", { precision: 10, scale: 2 }).notNull(),
   features: jsonb("features"),
@@ -70,28 +90,40 @@ export const trainingPackages = pgTable("training_packages", {
 
 export const scheduleSlots = pgTable("schedule_slots", {
   id: uuid("id").primaryKey().defaultRandom(),
-  personalId: uuid("personal_id").references(() => personals.id).notNull(),
+  personalId: uuid("personal_id")
+    .references(() => personals.id)
+    .notNull(),
   startTime: timestamp("start_time").notNull(),
   endTime: timestamp("end_time").notNull(),
   maxCapacity: integer("max_capacity").default(1).notNull(),
   location: text("location"),
 });
 
-export const checkins = pgTable("checkins", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  athleteId: uuid("athlete_id").references(() => athletes.id).notNull(),
-  slotId: uuid("slot_id").references(() => scheduleSlots.id).notNull(),
-  status: text("status").default("scheduled").notNull(),
-  confirmedAt: timestamp("confirmed_at"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-}, (t) => [
-  uniqueIndex("unq_checkin_athlete_slot").on(t.athleteId, t.slotId)
-]);
+export const checkins = pgTable(
+  "checkins",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    athleteId: uuid("athlete_id")
+      .references(() => athletes.id)
+      .notNull(),
+    slotId: uuid("slot_id")
+      .references(() => scheduleSlots.id)
+      .notNull(),
+    status: text("status").default("scheduled").notNull(),
+    confirmedAt: timestamp("confirmed_at"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (t) => [uniqueIndex("unq_checkin_athlete_slot").on(t.athleteId, t.slotId)],
+);
 
 export const trainingPlans = pgTable("training_plans", {
   id: uuid("id").primaryKey().defaultRandom(),
-  athleteId: uuid("athlete_id").references(() => athletes.id).notNull(),
-  personalId: uuid("personal_id").references(() => personals.id).notNull(),
+  athleteId: uuid("athlete_id")
+    .references(() => athletes.id)
+    .notNull(),
+  personalId: uuid("personal_id")
+    .references(() => personals.id)
+    .notNull(),
   status: text("status").notNull().default("draft"),
   startDate: timestamp("start_date"),
   endDate: timestamp("end_date"),
@@ -101,14 +133,18 @@ export const trainingPlans = pgTable("training_plans", {
 
 export const workoutSessions = pgTable("workout_sessions", {
   id: uuid("id").primaryKey().defaultRandom(),
-  planId: uuid("plan_id").references(() => trainingPlans.id).notNull(),
+  planId: uuid("plan_id")
+    .references(() => trainingPlans.id)
+    .notNull(),
   name: text("name").notNull(),
   order: integer("order").notNull(),
 });
 
 export const workoutExercises = pgTable("workout_exercises", {
   id: uuid("id").primaryKey().defaultRandom(),
-  sessionId: uuid("session_id").references(() => workoutSessions.id).notNull(),
+  sessionId: uuid("session_id")
+    .references(() => workoutSessions.id)
+    .notNull(),
   exerciseId: text("exercise_id").notNull(), // ID do documento no Sanity
   order: integer("order").notNull(),
   sets: integer("sets"),
@@ -119,8 +155,12 @@ export const workoutExercises = pgTable("workout_exercises", {
 
 export const workoutLogs = pgTable("workout_logs", {
   id: uuid("id").primaryKey().defaultRandom(),
-  athleteId: uuid("athlete_id").references(() => athletes.id).notNull(),
-  sessionId: uuid("session_id").references(() => workoutSessions.id).notNull(),
+  athleteId: uuid("athlete_id")
+    .references(() => athletes.id)
+    .notNull(),
+  sessionId: uuid("session_id")
+    .references(() => workoutSessions.id)
+    .notNull(),
   rpe: integer("rpe"),
   feeling: text("feeling"),
   completedAt: timestamp("completed_at").defaultNow().notNull(),

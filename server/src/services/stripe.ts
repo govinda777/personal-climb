@@ -1,9 +1,9 @@
-import Stripe from 'stripe';
+import Stripe from "stripe";
 
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || 'sk_test_mock';
+const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "sk_test_mock";
 
 export const stripe = new Stripe(STRIPE_SECRET_KEY, {
-  apiVersion: '2025-02-24.acacia' as any,
+  apiVersion: "2025-02-24.acacia" as any,
 });
 
 export class StripeService {
@@ -13,7 +13,10 @@ export class StripeService {
    * @param returnUrl The URL to return the customer to after they exit the portal
    * @returns The URL for the billing portal session
    */
-  async createBillingPortalSession(customerId: string, returnUrl: string): Promise<string> {
+  async createBillingPortalSession(
+    customerId: string,
+    returnUrl: string,
+  ): Promise<string> {
     try {
       const session = await stripe.billingPortal.sessions.create({
         customer: customerId,
@@ -22,7 +25,7 @@ export class StripeService {
 
       return session.url;
     } catch (error) {
-      console.error('Error creating Stripe Billing Portal session:', error);
+      console.error("Error creating Stripe Billing Portal session:", error);
       throw error;
     }
   }

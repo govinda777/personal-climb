@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useNFC } from "@/hooks/useNFC";
 import { Button } from "@/components/ui/Button";
@@ -12,7 +12,7 @@ export default function TrainingPlayer() {
   const { profile, awardXP } = useGamification();
 
   const handleFinishSession = async () => {
-    const updated = await awardXP('workout-complete');
+    const updated = await awardXP("workout-complete");
     if (updated?.message) {
       alert(updated.message);
     }
@@ -22,7 +22,10 @@ export default function TrainingPlayer() {
     <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-50 p-6">
       <header className="flex flex-col gap-6 mb-8">
         <div className="flex justify-between items-center">
-          <Link href="/p/govinda" className="p-2 -ml-2 text-zinc-500 hover:text-white transition-colors">
+          <Link
+            href="/p/govinda"
+            className="p-2 -ml-2 text-zinc-500 hover:text-white transition-colors"
+          >
             <ChevronLeft className="w-6 h-6" />
           </Link>
           <Button
@@ -37,8 +40,12 @@ export default function TrainingPlayer() {
 
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h1 className="text-4xl font-black italic uppercase tracking-tighter">Treino de Força</h1>
-            <p className="text-zinc-500 font-bold italic uppercase text-sm">Sessão A1 - Ciclo de Potência</p>
+            <h1 className="text-4xl font-black italic uppercase tracking-tighter">
+              Treino de Força
+            </h1>
+            <p className="text-zinc-500 font-bold italic uppercase text-sm">
+              Sessão A1 - Ciclo de Potência
+            </p>
           </div>
           {profile && (
             <div className="w-full md:w-80">
@@ -52,26 +59,45 @@ export default function TrainingPlayer() {
         {/* Active Exercise Card */}
         <div className="bg-zinc-900 rounded-3xl p-8 flex flex-col items-center gap-6 border border-zinc-800 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-white/10" />
-          <span className="text-zinc-500 font-black uppercase tracking-widest text-[10px]">Próximo Exercício</span>
-          <h2 className="text-3xl md:text-5xl font-black text-center italic uppercase tracking-tighter">SUSPENSÃO EM REGLETE (20MM)</h2>
+          <span className="text-zinc-500 font-black uppercase tracking-widest text-[10px]">
+            Próximo Exercício
+          </span>
+          <h2 className="text-3xl md:text-5xl font-black text-center italic uppercase tracking-tighter">
+            SUSPENSÃO EM REGLETE (20MM)
+          </h2>
 
           <div className="flex gap-8 md:gap-16 my-4">
             <div className="text-center">
-              <span className="block text-4xl md:text-6xl font-black italic tracking-tighter">7s</span>
-              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Tempo</span>
+              <span className="block text-4xl md:text-6xl font-black italic tracking-tighter">
+                7s
+              </span>
+              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">
+                Tempo
+              </span>
             </div>
             <div className="text-center">
-              <span className="block text-4xl md:text-6xl font-black italic tracking-tighter">6</span>
-              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Reps</span>
+              <span className="block text-4xl md:text-6xl font-black italic tracking-tighter">
+                6
+              </span>
+              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">
+                Reps
+              </span>
             </div>
             <div className="text-center">
-              <span className="block text-4xl md:text-6xl font-black italic tracking-tighter">+10kg</span>
-              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">Carga</span>
+              <span className="block text-4xl md:text-6xl font-black italic tracking-tighter">
+                +10kg
+              </span>
+              <span className="text-zinc-500 text-[10px] font-black uppercase tracking-widest">
+                Carga
+              </span>
             </div>
           </div>
 
           <div className="flex gap-4 w-full">
-            <Button size="lg" className="flex-1 h-20 rounded-2xl text-xl font-black italic uppercase tracking-tighter bg-white text-black hover:bg-zinc-200">
+            <Button
+              size="lg"
+              className="flex-1 h-20 rounded-2xl text-xl font-black italic uppercase tracking-tighter bg-white text-black hover:bg-zinc-200"
+            >
               <Play className="w-6 h-6 mr-2 fill-current" /> INICIAR SÉRIE
             </Button>
           </div>
@@ -84,12 +110,21 @@ export default function TrainingPlayer() {
               <RotateCcw className="w-5 h-5 text-zinc-400" />
             </div>
             <div>
-              <span className="text-zinc-500 text-[10px] uppercase font-black tracking-widest">Descanso</span>
-              <div className="text-3xl font-black italic tracking-tighter">02:00</div>
+              <span className="text-zinc-500 text-[10px] uppercase font-black tracking-widest">
+                Descanso
+              </span>
+              <div className="text-3xl font-black italic tracking-tighter">
+                02:00
+              </div>
             </div>
           </div>
           <div className="flex gap-2">
-            <Button variant="outline" className="h-14 w-14 rounded-xl border-white/10"><Pause className="w-6 h-6" /></Button>
+            <Button
+              variant="outline"
+              className="h-14 w-14 rounded-xl border-white/10"
+            >
+              <Pause className="w-6 h-6" />
+            </Button>
           </div>
         </div>
 
@@ -101,7 +136,12 @@ export default function TrainingPlayer() {
       </main>
 
       <footer className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Button variant="outline" className="h-16 border-white/5 bg-zinc-900/50 text-zinc-400 font-black italic uppercase tracking-tighter hover:bg-zinc-900">LOG SENTIMENTO (RPE)</Button>
+        <Button
+          variant="outline"
+          className="h-16 border-white/5 bg-zinc-900/50 text-zinc-400 font-black italic uppercase tracking-tighter hover:bg-zinc-900"
+        >
+          LOG SENTIMENTO (RPE)
+        </Button>
         <Button
           onClick={handleFinishSession}
           className="h-16 bg-white text-black font-black italic uppercase tracking-tighter hover:bg-zinc-200"
