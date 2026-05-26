@@ -14,14 +14,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://personalclimb.com"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://personalclimb.com",
+  ),
   title: "PERSONAL CLIMB | High Performance Protocol",
-  description: "The ultimate high-performance operating system for climbing coaches and athletes. Optimize your training with Academia Boulder.",
-  keywords: ["climbing", "performance", "training", "bouldering", "coach", "personal trainer"],
+  description:
+    "The ultimate high-performance operating system for climbing coaches and athletes. Optimize your training with Academia Boulder.",
+  keywords: [
+    "climbing",
+    "performance",
+    "training",
+    "bouldering",
+    "coach",
+    "personal trainer",
+  ],
   authors: [{ name: "Govinda" }],
   openGraph: {
     title: "PERSONAL CLIMB | High Performance Protocol",
-    description: "The ultimate high-performance operating system for climbing coaches and athletes.",
+    description:
+      "The ultimate high-performance operating system for climbing coaches and athletes.",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://personalclimb.com",
     siteName: "Personal Climb",
     images: [
@@ -38,7 +49,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "PERSONAL CLIMB | High Performance Protocol",
-    description: "The ultimate high-performance operating system for climbing coaches and athletes.",
+    description:
+      "The ultimate high-performance operating system for climbing coaches and athletes.",
     images: ["/og-image.png"],
   },
   icons: {
@@ -59,7 +71,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        <meta httpEquiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:;" />
+        <meta
+          httpEquiv="Content-Security-Policy"
+          content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https: http:;"
+        />
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>{children}</Providers>

@@ -73,12 +73,8 @@
           "name": "anamnesis_athlete_id_athletes_id_fk",
           "tableFrom": "anamnesis",
           "tableTo": "athletes",
-          "columnsFrom": [
-            "athlete_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["athlete_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -157,12 +153,8 @@
           "name": "athletes_user_id_profiles_id_fk",
           "tableFrom": "athletes",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -170,12 +162,8 @@
           "name": "athletes_personal_id_personals_id_fk",
           "tableFrom": "athletes",
           "tableTo": "personals",
-          "columnsFrom": [
-            "personal_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["personal_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -258,12 +246,8 @@
           "name": "checkins_athlete_id_athletes_id_fk",
           "tableFrom": "checkins",
           "tableTo": "athletes",
-          "columnsFrom": [
-            "athlete_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["athlete_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -271,12 +255,8 @@
           "name": "checkins_slot_id_schedule_slots_id_fk",
           "tableFrom": "checkins",
           "tableTo": "schedule_slots",
-          "columnsFrom": [
-            "slot_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["slot_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -330,12 +310,8 @@
           "name": "gamification_logs_profile_id_profiles_id_fk",
           "tableFrom": "gamification_logs",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -439,12 +415,8 @@
           "name": "personals_user_id_profiles_id_fk",
           "tableFrom": "personals",
           "tableTo": "profiles",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -454,9 +426,7 @@
         "personals_slug_unique": {
           "name": "personals_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -565,12 +535,8 @@
           "name": "schedule_slots_personal_id_personals_id_fk",
           "tableFrom": "schedule_slots",
           "tableTo": "personals",
-          "columnsFrom": [
-            "personal_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["personal_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -623,12 +589,8 @@
           "name": "training_packages_personal_id_personals_id_fk",
           "tableFrom": "training_packages",
           "tableTo": "personals",
-          "columnsFrom": [
-            "personal_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["personal_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -701,12 +663,8 @@
           "name": "training_plans_athlete_id_athletes_id_fk",
           "tableFrom": "training_plans",
           "tableTo": "athletes",
-          "columnsFrom": [
-            "athlete_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["athlete_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -714,12 +672,8 @@
           "name": "training_plans_personal_id_personals_id_fk",
           "tableFrom": "training_plans",
           "tableTo": "personals",
-          "columnsFrom": [
-            "personal_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["personal_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -790,12 +744,8 @@
           "name": "workout_exercises_session_id_workout_sessions_id_fk",
           "tableFrom": "workout_exercises",
           "tableTo": "workout_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -855,12 +805,8 @@
           "name": "workout_logs_athlete_id_athletes_id_fk",
           "tableFrom": "workout_logs",
           "tableTo": "athletes",
-          "columnsFrom": [
-            "athlete_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["athlete_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -868,12 +814,8 @@
           "name": "workout_logs_session_id_workout_sessions_id_fk",
           "tableFrom": "workout_logs",
           "tableTo": "workout_sessions",
-          "columnsFrom": [
-            "session_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["session_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -920,12 +862,8 @@
           "name": "workout_sessions_plan_id_training_plans_id_fk",
           "tableFrom": "workout_sessions",
           "tableTo": "training_plans",
-          "columnsFrom": [
-            "plan_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["plan_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

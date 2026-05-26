@@ -4,12 +4,12 @@ This document outlines the organization of the `src/app` directory using Next.js
 
 ## 1. Actor Definitions & Experience Strategy
 
-| Actor | Target Audience | Primary Goal | UI/UX Strategy |
-| :--- | :--- | :--- | :--- |
-| **Business** | Coaches/Gyms | Sales & Conversion | Premium, marketing-heavy, dark/gold accents. |
-| **Professor** | Trainers | Management & Productivity | Dashboard style, data-dense, sidebar navigation. |
-| **Athlete** | Students | Execution & Consistency | Mobile-first, high contrast, "Focus Mode" for training. |
-| **Public** | Prospects | Branding & Onboarding | Clean, trustworthy, reflects the Personal's brand. |
+| Actor         | Target Audience | Primary Goal              | UI/UX Strategy                                          |
+| :------------ | :-------------- | :------------------------ | :------------------------------------------------------ |
+| **Business**  | Coaches/Gyms    | Sales & Conversion        | Premium, marketing-heavy, dark/gold accents.            |
+| **Professor** | Trainers        | Management & Productivity | Dashboard style, data-dense, sidebar navigation.        |
+| **Athlete**   | Students        | Execution & Consistency   | Mobile-first, high contrast, "Focus Mode" for training. |
+| **Public**    | Prospects       | Branding & Onboarding     | Clean, trustworthy, reflects the Personal's brand.      |
 
 ## 2. Directory Structure
 
@@ -49,7 +49,9 @@ src/app/
 ## 4. Implementation Details
 
 ### Profile Routes
+
 The profile route was shortened from `/personal/[slug]` to `/p/[slug]`. Internal links should be updated to reflect this change.
 
 ### Layouts
+
 Each route group contains its own `layout.tsx` to handle specific navigation patterns (e.g., bottom bar for athletes, sidebar for professors).

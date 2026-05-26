@@ -9,6 +9,8 @@ export const stripeService = {
 
   async reportUsage(subscriptionItemId: string, quantity: number) {
     // TODO: Implementar registro de uso para metered billing
-    console.log(`Reportando uso: ${quantity} atletas no item ${subscriptionItemId}`);
-  }
+    console.log(
+      `Reportando uso: ${quantity} atletas no item ${subscriptionItemId}`,
+    );
+  },
 };

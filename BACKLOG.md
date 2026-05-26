@@ -10,19 +10,19 @@
 *Fluxos fundacionais de negócio e identidade já estabelecidos ou em estabilização.*
 
 - [x] **UC01: Seleção de Perfil (Onboarding)**
-  - *Técnico:* Redirecionamento dinâmico inteligente (Aluno vs Personal). Estado efêmero persistido via `sessionStorage` (`hasSeenUserTypeModal`).
+  - _Técnico:_ Redirecionamento dinâmico inteligente (Aluno vs Personal). Estado efêmero persistido via `sessionStorage` (`hasSeenUserTypeModal`).
 - [x] **UC02: Autenticação Universal & Web3 (Privy)**
-  - *Técnico:* Auth passwordless (OTP/Magic Link) provendo Embedded Wallet invisível (flag `createOnLogin`). Entidade primária mapeada via Privy DID em Postgres (`text`).
+  - _Técnico:_ Auth passwordless (OTP/Magic Link) provendo Embedded Wallet invisível (flag `createOnLogin`). Entidade primária mapeada via Privy DID em Postgres (`text`).
 - [x] **UC03: Assinatura e Pagamentos (Stripe Checkout)**
-  - *Técnico:* Fluxo de checkout integrado no hotsite do treinador.
+  - _Técnico:_ Fluxo de checkout integrado no hotsite do treinador.
 - [x] **UC04: Gestão de Assinaturas (Billing Tracker)**
-  - *Técnico:* Usage-based billing sincronizado em background via Stripe Webhooks. Status reflete nas tabelas `personals` e `athletes` (controle de acesso).
+  - _Técnico:_ Usage-based billing sincronizado em background via Stripe Webhooks. Status reflete nas tabelas `personals` e `athletes` (controle de acesso).
 
 ## 🖥️ Frontend & UX (Hotsite & Dashboard)
 *Gestão e parametrização das áreas do Treinador (Dashboard) e do Aluno (Hotsite).*
 
 - [x] **UC05: Hotsite White-label Dinâmico (Core Engine)**
-  - *Técnico:* Roteamento dinâmico `/personal/[slug]` em Next.js (SSG via `generateStaticParams`). Mesclagem de configurações (Drizzle ORM + Sanity CMS).
+  - _Técnico:_ Roteamento dinâmico `/personal/[slug]` em Next.js (SSG via `generateStaticParams`). Mesclagem de configurações (Drizzle ORM + Sanity CMS).
 - [ ] **UC06: Setup de Marca e Perfil (CMS/DB Integration)**
   - **Critério de Aceite:** Interface no Dashboard do Personal para atualizar cores, bio e pacotes. Os dados devem atualizar nos respectivos bancos de origem (ex: Postgres para pacotes, CMS Sanity para bio/cores). O Hotsite deve buscar os dados corretamente de cada fonte, assumindo que eles são entidades distintas na arquitetura. Requer cobertura E2E com Playwright.
 - [ ] **UC08: Motor de Agenda e Capacidade (Schedule Slots)**

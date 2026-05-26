@@ -1,4 +1,12 @@
-import { describe, expect, it, mock, beforeEach, afterEach, setSystemTime } from "bun:test";
+import {
+  describe,
+  expect,
+  it,
+  mock,
+  beforeEach,
+  afterEach,
+  setSystemTime,
+} from "bun:test";
 
 // Mock the database schema and drizzle-orm before importing the service
 mock.module("../db/schema", () => ({
@@ -73,7 +81,11 @@ describe("GamificationService", () => {
       }));
 
       // Mock update to return updated profile
-      const updatedProfile = { ...mockProfile, xp: mockProfile.xp + 10, lastLoginAt: now };
+      const updatedProfile = {
+        ...mockProfile,
+        xp: mockProfile.xp + 10,
+        lastLoginAt: now,
+      };
       mockDb.update.mockImplementation(() => ({
         set: () => ({
           where: () => ({
@@ -85,7 +97,9 @@ describe("GamificationService", () => {
       const result = await service.handleDailyLogin(userId);
 
       expect(result.awarded).toBe(true);
-      expect(result.xp).toBe(mockProfile.xp + GAMIFICATION_CONFIG.REWARDS.DAILY_LOGIN.XP);
+      expect(result.xp).toBe(
+        mockProfile.xp + GAMIFICATION_CONFIG.REWARDS.DAILY_LOGIN.XP,
+      );
 
       // Verify update was called to set lastLoginAt
       expect(mockDb.update).toHaveBeenCalled();
@@ -106,7 +120,11 @@ describe("GamificationService", () => {
         }),
       }));
 
-      const updatedProfile = { ...profileWithLastLogin, xp: profileWithLastLogin.xp + 10, lastLoginAt: now };
+      const updatedProfile = {
+        ...profileWithLastLogin,
+        xp: profileWithLastLogin.xp + 10,
+        lastLoginAt: now,
+      };
       mockDb.update.mockImplementation(() => ({
         set: () => ({
           where: () => ({
@@ -118,7 +136,9 @@ describe("GamificationService", () => {
       const result = await service.handleDailyLogin(userId);
 
       expect(result.awarded).toBe(true);
-      expect(result.xp).toBe(profileWithLastLogin.xp + GAMIFICATION_CONFIG.REWARDS.DAILY_LOGIN.XP);
+      expect(result.xp).toBe(
+        profileWithLastLogin.xp + GAMIFICATION_CONFIG.REWARDS.DAILY_LOGIN.XP,
+      );
     });
 
     it("should NOT award XP for login on the same day", async () => {
@@ -157,7 +177,11 @@ describe("GamificationService", () => {
         }),
       }));
 
-      const updatedProfile = { ...profileWithLastLogin, xp: profileWithLastLogin.xp + 10, lastLoginAt: now };
+      const updatedProfile = {
+        ...profileWithLastLogin,
+        xp: profileWithLastLogin.xp + 10,
+        lastLoginAt: now,
+      };
       mockDb.update.mockImplementation(() => ({
         set: () => ({
           where: () => ({

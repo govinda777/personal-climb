@@ -31,7 +31,14 @@ describe("XpAttestation", function () {
 
     const signature = await authority.signTypedData(domain, types, payload);
 
-    await expect(attestation.attestXp(payload.user, payload.totalXp, payload.nonce, signature))
+    await expect(
+      attestation.attestXp(
+        payload.user,
+        payload.totalXp,
+        payload.nonce,
+        signature,
+      ),
+    )
       .to.emit(attestation, "XpAttested")
       .withArgs(payload.user, payload.totalXp, payload.nonce);
 
@@ -39,13 +46,25 @@ describe("XpAttestation", function () {
     expect(await attestation.processedNonces(nonce)).to.equal(true);
 
     // Replay attack should fail
-    await expect(attestation.attestXp(payload.user, payload.totalXp, payload.nonce, signature))
-      .to.be.revertedWith("Nonce already processed");
+    await expect(
+      attestation.attestXp(
+        payload.user,
+        payload.totalXp,
+        payload.nonce,
+        signature,
+      ),
+    ).to.be.revertedWith("Nonce already processed");
 
     // Invalid signature should fail
     const invalidSignature = await user.signTypedData(domain, types, payload);
     const newNonce = ethers.hexlify(ethers.randomBytes(32));
-    await expect(attestation.attestXp(payload.user, payload.totalXp, newNonce, invalidSignature))
-      .to.be.revertedWith("Invalid signature or unauthorized signer");
+    await expect(
+      attestation.attestXp(
+        payload.user,
+        payload.totalXp,
+        newNonce,
+        invalidSignature,
+      ),
+    ).to.be.revertedWith("Invalid signature or unauthorized signer");
   });
 });

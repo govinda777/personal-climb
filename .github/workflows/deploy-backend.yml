@@ -3,7 +3,7 @@ name: Sync Backend Database
 on:
   push:
     branches: [main]
-    paths: ['server/**']
+    paths: ["server/**"]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

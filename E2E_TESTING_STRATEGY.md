@@ -7,11 +7,14 @@ Este documento descreve os padrões, mocks e cenários de testes automatizados E
 Testar fluxos Web3 em pipelines de CI/CD apresenta o desafio de interagir com carteiras externas (como Metamask ou Privy) sem intervenção humana. A nossa abordagem resolve isso através de **Bypass de Sessão e Interceptação de API**.
 
 ### 1.1 Mocking do Privy no Frontend (Playwright `page.route`)
+
 Em vez de automatizar cliques na interface do Privy, nós injetamos um Token JWT simulado (`mock-token`) e interceptamos as chamadas de rede no Playwright.
+
 - **Configuração:** `await page.route('**/api/*', ...)` é utilizado para simular a resposta do backend (Hono).
 - **Vantagem:** Evitamos dependência de serviços externos, melhoramos a velocidade do teste e garantimos total estabilidade (flakiness reduction).
 
 ### 1.2 Testando a API Real em CI
+
 Para os testes de backend (onde não mockamos), utilizamos testes de unidade via `bun test` no diretório `server/src/services/` (ex: `gamification.test.ts`). O Playwright é mantido exclusivamente para as asserções de frontend (UI/Rede).
 
 ---
@@ -21,16 +24,19 @@ Para os testes de backend (onde não mockamos), utilizamos testes de unidade via
 A suíte principal encontra-se em `client/tests/e2e/gamification.spec.ts`.
 
 ### Caso 1: Sucesso no Gatilho de Gamificação (Missão Completada)
+
 - **Objetivo:** Validar que uma ação "in-game" (ex: preencher a anamnese/onboarding) concede XP.
 - **Fluxo:** O mock dispara a chamada para `/actions/onboarding` e o teste verifica se o sistema retorna o `HTTP 200` e a quantidade correta de XP esperada (`100 XP`).
 - **Validação de Atomicidade:** Apenas se o payload de sucesso for recebido, a "interface" ou "carteira" atualiza o XP.
 
 ### Caso 2: Resiliência e Proteção Anti-Farm (Rate Limiting)
+
 - **Objetivo:** Garantir que um usuário/bot não consiga chamar repetidamente o mesmo endpoint de recompensa.
-- **Fluxo:** O teste realiza uma **segunda chamada consecutiva** para o mesmo endpoint (`/actions/onboarding`), simulando a mesma ação sendo feita antes do tempo de *cooldown* de 8760 horas (1 ano) para onboarding.
+- **Fluxo:** O teste realiza uma **segunda chamada consecutiva** para o mesmo endpoint (`/actions/onboarding`), simulando a mesma ação sendo feita antes do tempo de _cooldown_ de 8760 horas (1 ano) para onboarding.
 - **Validação:** A API retorna `HTTP 429 Too Many Requests` com a mensagem correta ("Rate limit exceeded"), impedindo o farm de pontos.
 
 ### Caso 3: Verificação Criptográfica (EIP-712 Proof of Score)
+
 - **Objetivo:** Validar o endpoint seguro que será usado por plataformas parceiras e smart contracts (EAS).
 - **Fluxo:** O teste chama `/verify-xp/:address`.
 - **Validação:** O teste checa se a estrutura retornada possui os requisitos obrigatórios para processamento on-chain:
@@ -43,6 +49,7 @@ A suíte principal encontra-se em `client/tests/e2e/gamification.spec.ts`.
 ---
 
 ## 3. Próximos Casos (Roadmap de Qualidade)
+
 Para expandir nossa cobertura futura, os seguintes casos devem ser implementados:
 
 1. **Testes Visuais (Componentes Web3):**
