@@ -7,6 +7,7 @@ import { drizzle } from 'drizzle-orm/neon-http'
 import * as schema from '../src/db/schema'
 import { eq, and } from 'drizzle-orm'
 import slotsApp from './slots'
+import { CreateCheckinUseCase } from '../src/use-cases/checkin/createCheckin'
 
 export const config = {
   runtime: 'edge'
@@ -30,29 +31,13 @@ app.post('/checkin', zValidator('json', checkinSchema), async (c) => {
   const { athleteId, slotId } = c.req.valid('json')
 
   try {
-    const sql = neon(process.env.DATABASE_URL!)
-    const db = drizzle(sql, { schema })
-
-    const [existingCheckin] = await db
-      .select()
-      .from(schema.checkins)
-      .where(and(eq(schema.checkins.athleteId, athleteId), eq(schema.checkins.slotId, slotId)))
-      .limit(1)
-
-    if (existingCheckin) {
-      return c.json({ status: 'error', message: 'User already checked in for this slot' }, 409)
-    }
-
-    await db.insert(schema.checkins).values({
-      athleteId,
-      slotId,
-      status: 'scheduled'
-    })
+    const useCase = new CreateCheckinUseCase();
+    await useCase.execute({ athleteId, slotId });
 
     return c.json({ status: 'success', message: 'Check-in confirmed' })
   } catch (error: any) {
     console.error('Checkin error:', error)
-    if (error.message?.includes('duplicate key value') || error.code === '23505') {
+    if (error.message?.includes('duplicate key value') || error.code === '23505' || error.message === 'User already checked in for this slot') {
        return c.json({ status: 'error', message: 'User already checked in for this slot' }, 409)
     }
     return c.json({ status: 'error', message: 'Internal server error' }, 500)

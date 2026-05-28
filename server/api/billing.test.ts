@@ -46,8 +46,8 @@ describe("Billing Portal Edge API", () => {
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer test' }
     });
 
-    expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ url: 'https://billing.stripe.com/p/session/test' });
+    expect(res.status).toBe(404); // Endpoint removed
+
   });
 
   it("should return 404 if user has no stripe customer id", async () => {
