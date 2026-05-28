@@ -6,6 +6,7 @@ import { neon } from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-http'
 import * as schema from '../src/db/schema'
 import { eq, and } from 'drizzle-orm'
+import slotsApp from './slots'
 
 export const config = {
   runtime: 'edge'
@@ -57,5 +58,9 @@ app.post('/checkin', zValidator('json', checkinSchema), async (c) => {
     return c.json({ status: 'error', message: 'Internal server error' }, 500)
   }
 })
+
+import { privyAuth } from '../src/middleware/auth'
+app.use('/slots/*', privyAuth())
+app.route('/slots', slotsApp)
 
 export default handle(app)
