@@ -45,7 +45,8 @@ export class GamificationService {
 
     const lastLog = logs[0];
     const now = new Date();
-    const hoursSinceLastAction = (now.getTime() - lastLog.createdAt.getTime()) / (1000 * 60 * 60);
+    if (!lastLog?.createdAt) return true;
+    const hoursSinceLastAction = (now.getTime() - lastLog!.createdAt.getTime()) / (1000 * 60 * 60);
 
     return hoursSinceLastAction >= cooldownHours;
   }
@@ -60,7 +61,7 @@ export class GamificationService {
       }
     }
 
-    const newXP = profile.xp + points;
+    const newXP = (profile?.xp ?? 0) + points;
 
     const newLevel = GAMIFICATION_CONFIG.LEVEL_FORMULA(newXP);
 
@@ -88,7 +89,7 @@ export class GamificationService {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const lastLogin = profile.lastLoginAt;
+    const lastLogin = profile?.lastLoginAt;
     const lastLoginDate = lastLogin ? new Date(lastLogin.getFullYear(), lastLogin.getMonth(), lastLogin.getDate()) : null;
 
     if (!lastLoginDate || lastLoginDate < today) {
@@ -101,6 +102,6 @@ export class GamificationService {
       return { ...updated, awarded: true };
     }
 
-    return { ...profile, awarded: false };
+    return { ...(profile || {}), awarded: false };
   }
 }

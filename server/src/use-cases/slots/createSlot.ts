@@ -21,7 +21,7 @@ export class CreateSlotUseCase {
       `
     ]);
 
-    const createdSlot = res[1].rows[0];
+    const createdSlot = (res[1] as any).rows[0];
     return createdSlot;
   }
 }

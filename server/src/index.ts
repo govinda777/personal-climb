@@ -38,6 +38,7 @@ app.use('/actions/*', privyAuth())
 app.get('/me', async (c) => {
   const user = c.get('user')
   const profile = await gamificationService.handleDailyLogin(user.id)
+  if (!profile) return c.json({ error: 'Failed' }, 500)
   return c.json(profile)
 })
 
@@ -98,7 +99,7 @@ app.get('/verify-xp/:address', async (c) => {
       primaryType: 'AttestPayload',
       message: {
         user: targetAddress as `0x${string}`,
-        totalXp: BigInt(profile.xp),
+        totalXp: BigInt(profile?.xp || 0),
         nonce: formattedNonce,
       },
     })
@@ -106,7 +107,7 @@ app.get('/verify-xp/:address', async (c) => {
     return c.json({
       payload: {
         user: targetAddress,
-        totalXp: profile.xp,
+        totalXp: profile?.xp || 0,
         nonce: formattedNonce,
       },
       signature,

@@ -15,7 +15,7 @@ export const privyAuth = () => {
 
     const token = authHeader.replace('Bearer ', '')
     try {
-      const verifiedClaims = await privy.verifySession(token)
+      const verifiedClaims = await privy.verifyAuthToken(token)
       c.set('user', { id: verifiedClaims.userId })
       await next()
     } catch (error) {

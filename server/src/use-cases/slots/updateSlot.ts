@@ -42,10 +42,11 @@ export class UpdateSlotUseCase {
 
     const res = await sql.transaction([
       sql`SET TRANSACTION ISOLATION LEVEL SERIALIZABLE`,
-      sql(`UPDATE schedule_slots SET ${setQueryString} WHERE id = $${values.length} RETURNING *`, values) as any
+      // @ts-ignore
+      sql(`UPDATE schedule_slots SET ${setQueryString} WHERE id = ${values.length} RETURNING *`, values)
     ]);
 
-    const updatedSlot = res[1].rows[0];
+    const updatedSlot = (res[1] as any).rows[0];
 
     if (!updatedSlot) {
       return null;

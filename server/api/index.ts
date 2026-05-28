@@ -9,9 +9,7 @@ import { eq, and } from 'drizzle-orm'
 import slotsApp from './slots'
 import { CreateCheckinUseCase } from '../src/use-cases/checkin/createCheckin'
 
-export const config = {
-  runtime: 'edge'
-}
+
 
 export const app = new Hono().basePath('/api')
 
@@ -44,8 +42,8 @@ app.post('/checkin', zValidator('json', checkinSchema), async (c) => {
   }
 })
 
-import { privyAuth } from '../src/middleware/auth'
-app.use('/slots/*', privyAuth())
+
+
 app.route('/slots', slotsApp)
 
 export default handle(app)
