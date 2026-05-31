@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button } from '@/components/ui/Button';
+import { API_URL } from '@/lib/api';
 
 export default function AthleteSchedulePage() {
   const { getAccessToken } = usePrivy();
@@ -14,7 +15,7 @@ export default function AthleteSchedulePage() {
   const fetchSlots = async () => {
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/slots`, {
+      const response = await fetch(`${API_URL}/api/athlete/slots`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.ok) {
@@ -37,7 +38,7 @@ export default function AthleteSchedulePage() {
     setCheckingIn(slotId);
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/checkin`, {
+      const response = await fetch(`${API_URL}/api/athlete/checkin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

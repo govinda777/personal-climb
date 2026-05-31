@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button } from '@/components/ui/Button';
+import { API_URL } from '@/lib/api';
 
 const anamnesisSchema = z.object({
   medicalRestrictions: z.string().optional(),
@@ -48,7 +49,7 @@ export default function AnamnesisPage() {
       };
 
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/anamnesis`, {
+      const response = await fetch(`${API_URL}/api/athlete/anamnesis`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

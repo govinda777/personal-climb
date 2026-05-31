@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button } from "@/components/ui/Button";
+import { API_URL } from '@/lib/api';
 
 export default function AthleteProfilePage() {
   const { authenticated, getAccessToken, user } = usePrivy();
@@ -15,7 +16,7 @@ export default function AthleteProfilePage() {
       if (!authenticated) return;
       try {
         const token = await getAccessToken();
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/me`, {
+        const res = await fetch(`${API_URL}/api/athlete/me`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -87,9 +88,13 @@ export default function AthleteProfilePage() {
               <Button variant="outline" className="w-full text-xs border-zinc-600 hover:bg-zinc-700 hover:text-white" onClick={async () => {
     try {
       const token = await getAccessToken();
-      // Em produção usariamos o endereço real da wallet conectada (farcaster/solana/etc)
-      const targetAddress = "0x70997970C51812dc3A010C7d01b50e0d17dc79C8";
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/verify-xp/${targetAddress}`, {
+      // Obtendo o endereço da carteira Web3 conectada ao perfil Privy do atleta
+      const targetAddress = user?.wallet?.address || user?.smartWallet?.address;
+      if (!targetAddress) {
+        alert("Carteira Web3 não encontrada no seu perfil. Por favor, conecte uma carteira.");
+        return;
+      }
+      const res = await fetch(`${API_URL}/api/athlete/verify-xp/${targetAddress}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {

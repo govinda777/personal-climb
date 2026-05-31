@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button } from '@/components/ui/Button';
+import { API_URL } from '@/lib/api';
 
 const rpeSchema = z.object({
   sessionId: z.string().uuid('Sessão inválida.'), // Na prática isso viria da rota/contexto
@@ -41,7 +42,7 @@ export default function WorkoutExecutionPage() {
       const token = await getAccessToken();
 
       // 1. Enviar o Log do Treino
-      const logResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/workout-log`, {
+      const logResponse = await fetch(`${API_URL}/api/athlete/workout-log`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ export default function WorkoutExecutionPage() {
       if (!logResponse.ok) throw new Error('Falha ao registrar treino');
 
       // 2. Acionar Gamificação
-      const gamificationResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/athlete/actions/workout-complete`, {
+      const gamificationResponse = await fetch(`${API_URL}/api/athlete/actions/workout-complete`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` }
       });

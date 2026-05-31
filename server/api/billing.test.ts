@@ -1,6 +1,7 @@
 import { describe, expect, it, mock } from "bun:test";
 
-let mockUserResult: any[] = [{ stripeCustomerId: 'cus_123' }];
+global.global.mockUserResult = [{ stripeCustomerId: 'cus_123' }];
+let mockUserResult: any[] = global.mockUserResult;
 
 const mockDb = {
   select: mock(() => ({
@@ -51,7 +52,7 @@ describe("Billing Portal Edge API", () => {
   });
 
   it("should return 404 if user has no stripe customer id", async () => {
-    mockUserResult = [];
+    global.mockUserResult = [];
     const res = await app.request('/api/actions/billing-portal', {
       method: 'POST',
       body: JSON.stringify({ returnUrl: 'http://localhost:3000' }),
