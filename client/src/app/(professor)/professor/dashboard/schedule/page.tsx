@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useState, useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button } from '@/components/ui/Button';
+import { API_URL } from '@/lib/api';
 
 const scheduleSchema = z.object({
   date: z.string().min(1, 'A data é obrigatória.'),
@@ -39,7 +40,7 @@ export default function ScheduleManagementPage() {
   const fetchSlots = async () => {
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/professor/schedule`, {
+      const response = await fetch(`${API_URL}/api/professor/schedule`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.ok) {
@@ -72,7 +73,7 @@ export default function ScheduleManagementPage() {
       };
 
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/professor/schedule`, {
+      const response = await fetch(`${API_URL}/api/professor/schedule`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

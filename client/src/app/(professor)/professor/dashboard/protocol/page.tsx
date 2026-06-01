@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button } from '@/components/ui/Button';
+import { API_URL } from '@/lib/api';
 
 const protocolSchema = z.object({
   trainingPhilosophy: z.string().min(10, 'A metodologia deve ter pelo menos 10 caracteres.'),
@@ -52,7 +53,7 @@ export default function ProtocolConfigPage() {
 
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/professor/protocol`, {
+      const response = await fetch(`${API_URL}/api/professor/protocol`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

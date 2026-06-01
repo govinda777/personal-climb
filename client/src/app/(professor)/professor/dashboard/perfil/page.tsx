@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { Button } from '@/components/ui/Button';
+import { API_URL } from '@/lib/api';
 
 const profileSchema = z.object({
   brandName: z.string().min(2, 'O nome da marca deve ter pelo menos 2 caracteres.'),
@@ -41,7 +42,7 @@ export default function PerfilConfigPage() {
 
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/professor/profile`, {
+      const response = await fetch(`${API_URL}/api/professor/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

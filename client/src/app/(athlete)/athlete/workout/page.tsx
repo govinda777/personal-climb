@@ -22,7 +22,8 @@ export default function WorkoutExecutionPage() {
   const [success, setSuccess] = useState(false);
 
   // Exemplo estático: normalmente a sessionId viria de um fetch da sessão atual.
-  const mockSessionId = '123e4567-e89b-12d3-a456-426614174000';
+  // In real usage, this should come from route params or context.
+  const sessionId = '00000000-0000-0000-0000-000000000000';
 
   const {
     register,
@@ -31,7 +32,7 @@ export default function WorkoutExecutionPage() {
   } = useForm<RpeFormValues>({
     resolver: zodResolver(rpeSchema),
     defaultValues: {
-      sessionId: mockSessionId,
+      sessionId: sessionId,
       rpe: 5
     }
   });

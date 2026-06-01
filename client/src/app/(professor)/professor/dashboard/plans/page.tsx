@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { usePrivy } from '@privy-io/react-auth';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/Button';
+import { API_URL } from '@/lib/api';
 
 export default function PlansApprovalPage() {
   const { getAccessToken } = usePrivy();
@@ -23,7 +24,7 @@ export default function PlansApprovalPage() {
   const fetchPlans = async () => {
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/professor/plans`, {
+      const response = await fetch(`${API_URL}/api/professor/plans`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.ok) {
@@ -46,7 +47,7 @@ export default function PlansApprovalPage() {
     setActioning(planId);
     try {
       const token = await getAccessToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/professor/plans/${planId}/approve`, {
+      const response = await fetch(`${API_URL}/api/professor/plans/${planId}/approve`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

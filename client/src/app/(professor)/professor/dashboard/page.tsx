@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/Button";
+import { API_URL } from '@/lib/api';
 import { Users, AlertTriangle, TrendingUp, Clock } from "lucide-react";
 import { usePrivy } from '@privy-io/react-auth';
 
@@ -21,7 +22,7 @@ export default function ProfessorDashboard() {
 
       try {
         const token = await getAccessToken();
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/professor/dashboard`, {
+        const response = await fetch(`${API_URL}/api/professor/dashboard`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
