@@ -19,12 +19,26 @@ export class CheckinRepository {
 
   async insertCheckin(athleteId: string, slotId: string) {
     const sql = neon(process.env.DATABASE_URL!);
-    const db = drizzle(sql, { schema });
 
-    await db.insert(schema.checkins).values({
-      athleteId,
-      slotId,
-      status: 'scheduled'
-    });
+    const res = await sql.transaction([
+      sql`SET TRANSACTION ISOLATION LEVEL SERIALIZABLE`,
+      sql`
+        INSERT INTO checkins (athlete_id, slot_id, status)
+        SELECT ${athleteId}, ${slotId}, 'scheduled'
+        FROM schedule_slots
+        WHERE id = ${slotId}
+        AND (
+          SELECT COUNT(*)
+          FROM checkins
+          WHERE slot_id = ${slotId}
+        ) < max_capacity
+        RETURNING *;
+      `
+    ]);
+
+    const rows = (res[1] as any).rows;
+    if (!rows || rows.length === 0) {
+      throw new Error('Slot capacity reached');
+    }
   }
 }

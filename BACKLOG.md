@@ -36,7 +36,8 @@
   - *Critério de Aceite:* Tabela analítica consolidando alunos ativos (`isActive = true`), status de pagamento Stripe e sumário de progresso. *Regra de Negócio:* Em caso de cancelamento da assinatura pelo aluno, o acesso deve ser mantido até o final do ciclo de faturamento atual (Stripe billing cycle). Requer cobertura E2E no `client` com Playwright.
 - [ ] **UC11: Onboarding Clínico do Atleta (Anamnese)**
   - *Critério de Aceite:* Formulário pós-checkout validado via Zod. Os dados estruturados (`anamnesis`, `physical_stats`) atuarão como contexto base para o Agente de IA. Requer testes E2E para submissão do formulário.
-- [ ] **UC12: Agendamento e Check-in de Treinos**
+- [x] **UC12: Agendamento e Check-in de Treinos**
+  - *Status:* Implementado.
   - *Critério de Aceite:* Fluxo crítico. A API `/checkin` (Edge via Hono) deve aplicar validação rigorosa de UUIDs (Zod) e prevenir _data races_ na marcação concorrente de slots de horário. Requer testes unitários intensivos via `bun:test` usando `mock.module` para simular concorrência e erros de restrição (duplicação de chaves).
 - [ ] **UC13: Feedback Subjetivo Pós-Treino (Log RPE)**
   - *Critério de Aceite:* Input diário de Percepção Subjetiva de Esforço persistido no `workout_log` que irá retroalimentar heurísticas da IA.
@@ -72,7 +73,8 @@
 
 - [ ] **Tratamento de Falhas e Degradação Graciosa da IA:**
   - *Descrição:* Timeout/rate-limit do Gemini. Implementar fallback visual para o treinador. Validação estrita via esquema (Zod) da saída JSON da IA.
-- [ ] **Validação Estrita de Carga de Slots (Overbooking):**
+- [x] **Validação Estrita de Carga de Slots (Overbooking):**
+  - *Status:* Implementado.
   - *Descrição:* Prevenção contra data races. Usar isolation level `serializable` nas transações críticas no PostgreSQL (Hono/Drizzle).
 - [ ] **Segurança de XP / Abuso de Gamificação (Anti-farming):**
   - *Descrição:* Prevenir manipulação de relógio do cliente. Centralizar a lógica de XP (`lib/gamification.ts`) usando o relógio do servidor para calcular cooldowns e limites.
