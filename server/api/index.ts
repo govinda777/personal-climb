@@ -35,6 +35,9 @@ app.post('/checkin', zValidator('json', checkinSchema), async (c) => {
     return c.json({ status: 'success', message: 'Check-in confirmed' })
   } catch (error: any) {
     console.error('Checkin error:', error)
+    if (error.message === 'Slot capacity reached') {
+      return c.json({ status: 'error', message: 'Slot capacity reached' }, 409)
+    }
     if (error.message?.includes('duplicate key value') || error.code === '23505' || error.message === 'User already checked in for this slot') {
        return c.json({ status: 'error', message: 'User already checked in for this slot' }, 409)
     }
