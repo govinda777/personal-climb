@@ -9,6 +9,7 @@ mock.module("../db/schema", () => ({
 mock.module("drizzle-orm", () => ({
   eq: mock(() => ({})),
   and: mock(() => ({})),
+  desc: mock(() => ({})),
   sql: mock(() => ({})),
 }));
 
@@ -169,6 +170,105 @@ describe("GamificationService", () => {
       const result = await service.handleDailyLogin(userId);
 
       expect(result.awarded).toBe(true);
+    });
+    });
+
+  describe("addXP with cooldowns", () => {
+    const userId = "user_456";
+    const reason = "Workout Completed";
+    const points = 50;
+
+    it("should allow adding XP if no previous logs exist", async () => {
+      mockDb.select.mockImplementationOnce(() => ({
+        from: () => ({
+          where: () => ({
+            limit: () => Promise.resolve([ { xp: 0 } ]), // getOrCreateProfile
+          }),
+        }),
+      }));
+
+      // Return empty array for canEarnXP logs check
+      mockDb.select.mockImplementationOnce(() => ({
+        from: () => ({
+          where: () => ({
+            orderBy: () => ({
+              limit: () => Promise.resolve([]),
+            })
+          }),
+        }),
+      }));
+
+      mockDb.update.mockImplementationOnce(() => ({
+        set: () => ({
+          where: () => ({
+            returning: () => Promise.resolve([{ xp: points, level: 1 }]),
+          }),
+        }),
+      }));
+
+      const result = await service.addXP(userId, points, reason, 12);
+      expect(result.xp).toBe(points);
+    });
+
+    it("should throw error if action is performed before cooldown expires", async () => {
+      mockDb.select.mockImplementationOnce(() => ({
+        from: () => ({
+          where: () => ({
+            limit: () => Promise.resolve([ { xp: 0 } ]), // getOrCreateProfile
+          }),
+        }),
+      }));
+
+      // Return a recent log for canEarnXP
+      const now = new Date();
+      const recentLog = { createdAt: new Date(now.getTime() - 2 * 60 * 60 * 1000) }; // 2 hours ago
+
+      mockDb.select.mockImplementationOnce(() => ({
+        from: () => ({
+          where: () => ({
+            orderBy: () => ({
+              limit: () => Promise.resolve([recentLog]),
+            })
+          }),
+        }),
+      }));
+
+      expect(service.addXP(userId, points, reason, 12)).rejects.toThrow("Rate limit exceeded for action: Workout Completed. Cooldown is 12 hours.");
+    });
+
+    it("should allow adding XP if cooldown has expired", async () => {
+      mockDb.select.mockImplementationOnce(() => ({
+        from: () => ({
+          where: () => ({
+            limit: () => Promise.resolve([ { xp: 0 } ]), // getOrCreateProfile
+          }),
+        }),
+      }));
+
+      // Return an old log for canEarnXP
+      const now = new Date();
+      const oldLog = { createdAt: new Date(now.getTime() - 15 * 60 * 60 * 1000) }; // 15 hours ago
+
+      mockDb.select.mockImplementationOnce(() => ({
+        from: () => ({
+          where: () => ({
+            orderBy: () => ({
+              limit: () => Promise.resolve([oldLog]),
+            })
+          }),
+        }),
+      }));
+
+      mockDb.update.mockImplementationOnce(() => ({
+        set: () => ({
+          where: () => ({
+            returning: () => Promise.resolve([{ xp: points, level: 1 }]),
+          }),
+        }),
+      }));
+
+      const result = await service.addXP(userId, points, reason, 12);
+      expect(result.xp).toBe(points);
     });
   });
 });
